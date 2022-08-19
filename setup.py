@@ -22,5 +22,10 @@ if __name__ == "__main__":
         keywords= ['mlops', "experiment", "tracking", "deployments", "mlflow"],
         packages = ['newron'],
         license = 'Apache License',
-        install_requires = ["mlflow"]
+        install_requires = ["mlflow"],
+        entry_points="""
+                        [console_scripts]
+                        mlflow=mlflow.cli:cli
+                        mlp=mlflow.pipelines.cli:commands
+                    """
     )
