@@ -184,3 +184,244 @@ def run(
     except projects.ExecutionException as e:
         _logger.error("=== %s ===", e)
         sys.exit(1)
+
+@cli.command()
+@click.option(
+    "--backend-store-uri",
+    metavar="PATH",
+    default=DEFAULT_LOCAL_FILE_AND_ARTIFACT_PATH,
+    help="URI to which to persist experiment and run data. Acceptable URIs are "
+    "SQLAlchemy-compatible database connection strings "
+    "(e.g. 'sqlite:///path/to/file.db') or local filesystem URIs "
+    "(e.g. 'file:///absolute/path/to/directory'). By default, data will be logged "
+    "to the ./mlruns directory.",
+)
+@click.option(
+    "--registry-store-uri",
+    metavar="URI",
+    default=None,
+    help="URI to which to persist registered models. Acceptable URIs are "
+    "SQLAlchemy-compatible database connection strings (e.g. 'sqlite:///path/to/file.db'). "
+    "If not specified, `backend-store-uri` is used.",
+)
+@click.option(
+    "--default-artifact-root",
+    metavar="URI",
+    default=None,
+    help="Directory in which to store artifacts for any new experiments created. For tracking "
+    "server backends that rely on SQL, this option is required in order to store artifacts. "
+    "Note that this flag does not impact already-created experiments with any previous "
+    "configuration of an MLflow server instance. "
+    f"By default, data will be logged to the {DEFAULT_ARTIFACTS_URI} uri proxy if "
+    "the --serve-artifacts option is enabled. Otherwise, the default location will "
+    f"be {DEFAULT_LOCAL_FILE_AND_ARTIFACT_PATH}.",
+)
+@cli_args.SERVE_ARTIFACTS
+@click.option(
+    "--artifacts-only",
+    is_flag=True,
+    default=False,
+    help="If specified, configures the mlflow server to be used only for proxied artifact serving. "
+    "With this mode enabled, functionality of the mlflow tracking service (e.g. run creation, "
+    "metric logging, and parameter logging) is disabled. The server will only expose "
+    "endpoints for uploading, downloading, and listing artifacts. "
+    "Default: False",
+)
+@cli_args.ARTIFACTS_DESTINATION
+@cli_args.HOST
+@cli_args.PORT
+@cli_args.WORKERS
+@click.option(
+    "--static-prefix",
+    default=None,
+    callback=_validate_static_prefix,
+    help="A prefix which will be prepended to the path of all static paths.",
+)
+@click.option(
+    "--gunicorn-opts",
+    default=None,
+    help="Additional command line options forwarded to gunicorn processes.",
+)
+@click.option(
+    "--waitress-opts", default=None, help="Additional command line options for waitress-serve."
+)
+@click.option(
+    "--expose-prometheus",
+    default=None,
+    help="Path to the directory where metrics will be stored. If the directory "
+    "doesn't exist, it will be created. "
+    "Activate prometheus exporter to expose metrics on /metrics endpoint.",
+)
+def server(
+    backend_store_uri,
+    registry_store_uri,
+    default_artifact_root,
+    serve_artifacts,
+    artifacts_only,
+    artifacts_destination,
+    host,
+    port,
+    workers,
+    static_prefix,
+    gunicorn_opts,
+    waitress_opts,
+    expose_prometheus,
+):
+    """
+    Run the MLflow tracking server.
+    The server listens on http://localhost:5000 by default and only accepts connections
+    from the local machine. To let the server accept connections from other machines, you will need
+    to pass ``--host 0.0.0.0`` to listen on all network interfaces
+    (or a specific interface address).
+    """
+    from mlflow.server import _run_server
+    from mlflow.server.handlers import initialize_backend_stores
+
+    _validate_server_args(gunicorn_opts=gunicorn_opts, workers=workers, waitress_opts=waitress_opts)
+
+    # Ensure that both backend_store_uri and default_artifact_uri are set correctly.
+    if not backend_store_uri:
+        backend_store_uri = DEFAULT_LOCAL_FILE_AND_ARTIFACT_PATH
+
+    # the default setting of registry_store_uri is same as backend_store_uri
+    if not registry_store_uri:
+        registry_store_uri = backend_store_uri
+
+    default_artifact_root = resolve_default_artifact_root(
+        serve_artifacts, default_artifact_root, backend_store_uri
+    )
+    artifacts_only_config_validation(artifacts_only, backend_store_uri)
+
+    try:
+        initialize_backend_stores(backend_store_uri, registry_store_uri, default_artifact_root)
+    except Exception as e:
+        _logger.error("Error initializing backend store")
+        _logger.exception(e)
+        sys.exit(1)
+
+    try:
+        _run_server(
+            backend_store_uri,
+            registry_store_uri,
+            default_artifact_root,
+            serve_artifacts,
+            artifacts_only,
+            artifacts_destination,
+            host,
+            port,
+            static_prefix,
+            workers,
+            gunicorn_opts,
+            waitress_opts,
+            expose_prometheus,
+        )
+    except ShellCommandException:
+        eprint("Running the mlflow server failed. Please see the logs above for details.")
+        sys.exit(1)
+
+
+@cli.command(short_help="Permanently delete runs in the `deleted` lifecycle stage.")
+@click.option(
+    "--older-than",
+    default=None,
+    help="Optional. Remove run(s) older than the specified time limit. "
+    "Specify a string in #d#h#m#s format. Float values are also supported."
+    "For example: --older-than 1d2h3m4s, --older-than 1.2d3h4m5s",
+)
+@click.option(
+    "--backend-store-uri",
+    metavar="PATH",
+    default=DEFAULT_LOCAL_FILE_AND_ARTIFACT_PATH,
+    help="URI of the backend store from which to delete runs. Acceptable URIs are "
+    "SQLAlchemy-compatible database connection strings "
+    "(e.g. 'sqlite:///path/to/file.db') or local filesystem URIs "
+    "(e.g. 'file:///absolute/path/to/directory'). By default, data will be deleted "
+    "from the ./mlruns directory.",
+)
+@click.option(
+    "--run-ids",
+    default=None,
+    help="Optional comma separated list of runs to be permanently deleted. If run ids"
+    " are not specified, data is removed for all runs in the `deleted`"
+    " lifecycle stage.",
+)
+def gc(older_than, backend_store_uri, run_ids):
+    """
+    Permanently delete runs in the `deleted` lifecycle stage from the specified backend store.
+    This command deletes all artifacts and metadata associated with the specified runs.
+    """
+    backend_store = _get_store(backend_store_uri, None)
+    if not hasattr(backend_store, "_hard_delete_run"):
+        raise MlflowException(
+            "This cli can only be used with a backend that allows hard-deleting runs"
+        )
+
+    time_delta = 0
+
+    if older_than is not None:
+        regex = re.compile(
+            r"^((?P<days>[\.\d]+?)d)?((?P<hours>[\.\d]+?)h)?((?P<minutes>[\.\d]+?)m)"
+            r"?((?P<seconds>[\.\d]+?)s)?$"
+        )
+        parts = regex.match(older_than)
+        if parts is None:
+            raise MlflowException(
+                "Could not parse any time information from '{}'. "
+                "Examples of valid strings: '8h', '2d8h5m20s', '2m4s'".format(older_than),
+                error_code=INVALID_PARAMETER_VALUE,
+            )
+        time_params = {name: float(param) for name, param in parts.groupdict().items() if param}
+        time_delta = int(timedelta(**time_params).total_seconds() * 1000)
+
+    deleted_run_ids_older_than = backend_store._get_deleted_runs(older_than=time_delta)
+    if not run_ids:
+        run_ids = deleted_run_ids_older_than
+
+    else:
+        run_ids = run_ids.split(",")
+
+    for run_id in run_ids:
+        run = backend_store.get_run(run_id)
+        if run.info.lifecycle_stage != LifecycleStage.DELETED:
+            raise MlflowException(
+                "Run % is not in `deleted` lifecycle stage. Only runs in "
+                "`deleted` lifecycle stage can be deleted." % run_id
+            )
+        # raise MlflowException if run_id is newer than older_than parameter
+        if older_than and run_id not in deleted_run_ids_older_than:
+            raise MlflowException(
+                f"Run {run_id} is not older than the required age. "
+                f"Only runs older than {older_than} can be deleted.",
+                error_code=INVALID_PARAMETER_VALUE,
+            )
+        artifact_repo = get_artifact_repository(run.info.artifact_uri)
+        artifact_repo.delete_artifacts()
+        backend_store._hard_delete_run(run_id)
+        click.echo("Run with ID %s has been permanently deleted." % str(run_id))
+
+
+try:
+    import mlflow.models.cli  # pylint: disable=unused-import
+
+    cli.add_command(mlflow.models.cli.commands)
+except ImportError as e:
+    pass
+
+
+try:
+    import mlflow.azureml.cli  # pylint: disable=unused-import
+
+    cli.add_command(mlflow.azureml.cli.commands)
+except ImportError as e:
+    pass
+
+try:
+    import mlflow.sagemaker.cli  # pylint: disable=unused-import
+
+    cli.add_command(mlflow.sagemaker.cli.commands)
+except ImportError as e:
+    pass
+
+
+if __name__ == "__main__":
+    cli()
