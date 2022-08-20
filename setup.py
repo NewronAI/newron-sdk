@@ -25,7 +25,6 @@ if __name__ == "__main__":
         install_requires = ["mlflow"],
         entry_points="""
                         [console_scripts]
-                        mlflow=mlflow.cli:cli
-                        mlp=mlflow.pipelines.cli:commands
+                        newron=newron.cli:cli
                     """
     )
