@@ -185,6 +185,20 @@ def run(
         _logger.error("=== %s ===", e)
         sys.exit(1)
 
+
+def _validate_static_prefix(ctx, param, value):  # pylint: disable=unused-argument
+    """
+    Validate that the static_prefix option starts with a "/" and does not end in a "/".
+    Conforms to the callback interface of click documented at
+    http://click.pocoo.org/5/options/#callbacks-for-validation.
+    """
+    if value is not None:
+        if not value.startswith("/"):
+            raise UsageError("--static-prefix must begin with a '/'.")
+        if value.endswith("/"):
+            raise UsageError("--static-prefix should not end with a '/'.")
+    return value
+
 @cli.command()
 @click.option(
     "--backend-store-uri",
