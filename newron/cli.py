@@ -154,6 +154,9 @@ def run(
         eprint("Specify only one of 'experiment-name' or 'experiment-id' options.")
         sys.exit(1)
     
+    param_dict = _user_args_to_dict(param_list)
+    args_dict = _user_args_to_dict(docker_args, argument_type="A")
+    
     if backend_config is not None and os.path.splitext(backend_config)[-1] != ".json":
         try:
             backend_config = json.loads(backend_config)
@@ -185,6 +188,42 @@ def run(
         _logger.error("=== %s ===", e)
         sys.exit(1)
 
+def _user_args_to_dict(arguments, argument_type="P"):
+    user_dict = {}
+    for arg in arguments:
+        split = arg.split("=", maxsplit=1)
+        # Docker arguments such as `t` don't require a value -> set to True if specified
+        if len(split) == 1 and argument_type == "A":
+            name = split[0]
+            value = True
+        elif len(split) == 2:
+            name = split[0]
+            value = split[1]
+        else:
+            eprint(
+                "Invalid format for -%s parameter: '%s'. "
+                "Use -%s name=value." % (argument_type, arg, argument_type)
+            )
+            sys.exit(1)
+        if name in user_dict:
+            eprint("Repeated parameter: '%s'" % name)
+            sys.exit(1)
+        user_dict[name] = value
+    return user_dict
+
+def _validate_server_args(gunicorn_opts=None, workers=None, waitress_opts=None):
+    if sys.platform == "win32":
+        if gunicorn_opts is not None or workers is not None:
+            raise NotImplementedError(
+                "waitress replaces gunicorn on Windows, "
+                "cannot specify --gunicorn-opts or --workers"
+            )
+    else:
+        if waitress_opts is not None:
+            raise NotImplementedError(
+                "gunicorn replaces waitress on non-Windows platforms, "
+                "cannot specify --waitress-opts"
+            )
 
 def _validate_static_prefix(ctx, param, value):  # pylint: disable=unused-argument
     """
