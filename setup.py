@@ -2,6 +2,21 @@ import sys
 import subprocess
 from setuptools import setup
 
+MINIMUM_SUPPORTED_PYTHON_VERSION = "3.7"
+
+class MinPythonVersion(distutils.cmd.Command):
+    description = "Print out the minimum supported Python version"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        print(MINIMUM_SUPPORTED_PYTHON_VERSION)
+
 if sys.argv[-1] == 'setup.py':
     print('To install, run \'python setup.py install\'')
     print()
@@ -27,4 +42,7 @@ if __name__ == "__main__":
                         [console_scripts]
                         newron=newron.cli:cli
                     """
+        cmdclass={
+        "min_python_version": MinPythonVersion,
+                 },
     )
