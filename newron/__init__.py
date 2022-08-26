@@ -42,6 +42,7 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 from mlflow import projects
 from newron import tracking
 from mlflow import models
+from newron import utils
 import mlflow.artifacts
 import mlflow.pipelines
 
@@ -166,7 +167,6 @@ set_registry_uri = tracking.set_registry_uri
 get_experiment = tracking.get_experiment
 get_experiment_by_name = tracking.get_experiment_by_name
 list_experiments = tracking.list_experiments
-
 run = projects.run
 
 
