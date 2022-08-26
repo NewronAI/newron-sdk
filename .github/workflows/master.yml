@@ -62,4 +62,5 @@ jobs:
     - name: Run tests
       run: |
         source dev/setup-ssh.sh
+        chmod +x ./dev/run-python-tests.sh
         ./dev/run-python-tests.sh
