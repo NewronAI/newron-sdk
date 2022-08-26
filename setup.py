@@ -1,6 +1,7 @@
 import sys
 import subprocess
 from setuptools import setup
+import distutils
 
 MINIMUM_SUPPORTED_PYTHON_VERSION = "3.7"
 
