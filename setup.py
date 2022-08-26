@@ -38,7 +38,7 @@ if __name__ == "__main__":
         entry_points="""
                         [console_scripts]
                         newron=newron.cli:cli
-                    """
+                    """,
         cmdclass={
         "min_python_version": MinPythonVersion,
                  },
