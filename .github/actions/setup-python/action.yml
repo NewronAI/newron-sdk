@@ -21,20 +21,19 @@ runs:
       run: |
         python_version="${{ inputs.python-version }}"
         if [ -z "$python_version" ]; then
-          python_version=$(python setup.py -q 
-          )
+            python_version=$(python setup.py -q min_python_version)
         fi
         if [[ "$python_version" == "3.7" ]]; then
-          if [ ${{ runner.os }} == "Windows" ]; then
+            if [ ${{ runner.os }} == "Windows" ]; then
             python_version="3.7.9"
-          else
+            else
             python_version="3.7.12"
-          fi
+            fi
         elif [[ "$python_version" == "3.8" ]]; then
-          python_version="3.8.12"
+            python_version="3.8.12"
         else
-          echo "Invalid python version: '$python_version'. Must be one of ['3.7', '3.8']"
-          exit 1
+            echo "Invalid python version: '$python_version'. Must be one of ['3.7', '3.8']"
+            exit 1
         fi
         echo "::set-output name=version::$python_version"
     - uses: actions/setup-python@v3
