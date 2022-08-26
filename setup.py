@@ -21,10 +21,6 @@ if sys.argv[-1] == 'setup.py':
     print('To install, run \'python setup.py install\'')
     print()
 
-if sys.version_info[:2] < (3, 5):
-    print(('lingatagger requires Python version 3.5 or later (%d.%d detected).' %sys.version_info[:2]))
-    sys.exit(-1)
-
 
 if __name__ == "__main__":
     setup(
