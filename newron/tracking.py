@@ -74,7 +74,7 @@ def init(experiment_name, description):
 
         headers = {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + auth_response.access_token
+            "Authorization": "Bearer " + auth_response["access_token"]
         }
 
         gateway_response = requests.request("POST", PROJECT_URI, json=payload, headers=headers)
