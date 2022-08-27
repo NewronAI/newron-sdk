@@ -4,6 +4,7 @@ from mlflow import tracking
 from mlflow.tracking.request_header.abstract_request_header_provider import RequestHeaderProvider
 from mlflow.entities import Experiment
 from newron.auth import Auth0
+import requests
 
 get_tracking_uri = tracking.get_tracking_uri
 get_registry_uri = tracking.get_registry_uri
@@ -46,6 +47,8 @@ get_experiment_by_name = mlflow.tracking.fluent.get_experiment_by_name
 list_experiments = mlflow.tracking.fluent.list_experiments
 
 SERVER_URI = "https://mlflow-tracking-server-zx44gn5asa-uc.a.run.app"
+PROJECT_URI = "https://grpc-api-gateway-d8q71ttn.uc.gateway.dev/v1/project"
+
 
 class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     """RequestHeaderProvider provided through plugin system"""
@@ -56,12 +59,25 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     def request_headers(self):
         return {"project_id": Experiment.experiment_id}
 
-def init(experiment_name:str = None):
+def init(experiment_name, description):
     _auth = Auth0()
-    print("init method")
-    if _auth.authenticate():
+    auth_response = _auth.authenticate()
+    if auth_response:
         set_tracking_uri(SERVER_URI)
-        print(SERVER_URI)
-        set_experiment(experiment_name)
+        import requests
+        url = "https://grpc-api-gateway-d8q71ttn.uc.gateway.dev/v1/project"
+
+        payload = {}
+        payload["name"] = experiment_name
+        if description:
+            payload["desc"] = description
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + auth_response.access_token
+        }
+
+        gateway_response = requests.request("POST", PROJECT_URI, json=payload, headers=headers)
+        set_experiment(gateway_response.mlflow.experimentId)
     else:
         raise Exception("Authentication failed")

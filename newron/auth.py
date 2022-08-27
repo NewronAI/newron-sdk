@@ -72,4 +72,4 @@ class Auth0():
         if(op.status_code != 200 or maxPolls == 0):
             # print("Error: " + op.text)
             exit()
-        return op.text
+        return op.json()
