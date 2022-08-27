@@ -59,7 +59,7 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     def request_headers(self):
         return {"project_id": Experiment.experiment_id}
 
-def init(experiment_name, description):
+def init(experiment_name, description=None):
     _auth = Auth0()
     auth_response = _auth.authenticate()
     if auth_response:
@@ -78,6 +78,6 @@ def init(experiment_name, description):
         }
 
         gateway_response = requests.request("POST", PROJECT_URI, json=payload, headers=headers)
-        set_experiment(gateway_response.mlflow.experimentId)
+        set_experiment(gateway_response["mlflow"]["experimentId"])
     else:
         raise Exception("Authentication failed")
