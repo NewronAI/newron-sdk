@@ -3,7 +3,7 @@ import mlflow.tracking.fluent
 from mlflow import tracking
 from mlflow.tracking.request_header.abstract_request_header_provider import RequestHeaderProvider
 from mlflow.entities import Experiment
-from auth import Auth0
+from newron.auth import Auth0
 
 get_tracking_uri = tracking.get_tracking_uri
 get_registry_uri = tracking.get_registry_uri
