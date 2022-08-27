@@ -25,7 +25,6 @@ class Auth0():
         print("\n\n************************************************************\n\n")
         print("Please visit the following link " + str(resp['verification_uri_complete']))
         print("\n\n************************************************************\n\n")
-        time.sleep(5)
         # Step 2: Open Webbrowser
         webbrowser.open(resp["verification_uri_complete"])
         # Step 3: Poll for token
