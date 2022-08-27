@@ -168,6 +168,7 @@ get_experiment = tracking.get_experiment
 get_experiment_by_name = tracking.get_experiment_by_name
 list_experiments = tracking.list_experiments
 run = projects.run
+init = tracking.init
 
 
 __all__ = [

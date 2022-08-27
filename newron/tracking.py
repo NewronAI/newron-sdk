@@ -1,7 +1,9 @@
 import mlflow.tracking._model_registry.fluent
 import mlflow.tracking.fluent
 from mlflow import tracking
-
+from mlflow.tracking.request_header.abstract_request_header_provider import RequestHeaderProvider
+from mlflow.entities import Experiment
+from auth import Auth0
 
 get_tracking_uri = tracking.get_tracking_uri
 get_registry_uri = tracking.get_registry_uri
@@ -42,3 +44,24 @@ set_registry_uri = tracking.set_registry_uri
 get_experiment = mlflow.tracking.fluent.get_experiment
 get_experiment_by_name = mlflow.tracking.fluent.get_experiment_by_name
 list_experiments = mlflow.tracking.fluent.list_experiments
+
+SERVER_URI = "https://mlflow-tracking-server-zx44gn5asa-uc.a.run.app"
+
+class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
+    """RequestHeaderProvider provided through plugin system"""
+
+    def in_context(self):
+        return True
+
+    def request_headers(self):
+        return {"project_id": Experiment.experiment_id}
+
+def init(experiment_name:str = None):
+    _auth = Auth0()
+    print("init method")
+    if _auth.authenticate():
+        set_tracking_uri(SERVER_URI)
+        print(SERVER_URI)
+        set_experiment(experiment_name)
+    else:
+        raise Exception("Authentication failed")
