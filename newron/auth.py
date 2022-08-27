@@ -47,11 +47,9 @@ class Auth0():
             maxPolls -= 1
             if op.status_code == 200:
                 print("Authorization Successful")
-                print(op.text)
                 break;
             if op.status_code == 400 or op.status_code == 401:
                 print("Authorization Failed")
-                print(op.text)
                 exit();
             if opJson["error"] == "invalid_grant":
                 print("Authorization Failed")
