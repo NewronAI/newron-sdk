@@ -4,10 +4,10 @@ import time
 import webbrowser
 
 class Auth0():
-    auth0url = os.environ("AUTH_URL")
+    auth0url = os.environ["AUTH_URL"]
     url = auth0url + '/oauth/device/code'
-    clientId = os.environ("CLIENT_ID")
-    audience = os.environ("AUDIENCE")
+    clientId = os.environ["CLIENT_ID"]
+    audience = os.environ["AUDIENCE"]
     clientCredentials = {"client_id": clientId , "scope" : "openid email profile newron-server" , "audience" : audience}
 
     def __init__(self) -> None:
