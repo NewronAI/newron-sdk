@@ -9,4 +9,4 @@ _ProphetModelWrapper = mlflow.prophet._ProphetModelWrapper
 _load_pyfunc = mlflow.prophet._load_pyfunc
 _save_model = mlflow.prophet._save_model
 load_model = mlflow.prophet.load_model
-autolog = mlflow.prophet.autolog
+#autolog = mlflow.prophet.autolog

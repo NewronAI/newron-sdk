@@ -49,59 +49,53 @@ import mlflow.pipelines
 
 # model flavors
 _model_flavors_supported = []
-try:
     # pylint: disable=unused-import
-    from newron import catboost
-    from newron import fastai
-    from newron import gluon
-    from newron  import h2o
-    from newron import keras
-    from newron import lightgbm
-    from mlflow import mleap
-    from newron import onnx
-    from mlflow import pyfunc
-    from newron import pytorch
-    from newron import sklearn
-    from newron import spacy
-    from newron import spark
-    from mlflow import statsmodels
-    from newron import tensorflow
-    from mlflow import xgboost
-    from mlflow import shap
-    from mlflow import pyspark
-    from mlflow import paddle
-    from newron import prophet
-    from newron import pmdarima
-    from newron import diviner
+from newron import catboost
+from newron import fastai
+from newron import gluon
+#from newron import h2o
+from newron import keras
+from newron import lightgbm
+from mlflow import mleap
+from newron import onnx
+from mlflow import pyfunc
+from newron import pytorch
+from newron import sklearn
+from newron import spacy
+from newron import spark
+from mlflow import statsmodels
+from newron import tensorflow
+from mlflow import xgboost
+from mlflow import shap
+from mlflow import pyspark
+from mlflow import paddle
+from newron import prophet
+from newron import pmdarima
+from newron import diviner
 
-    _model_flavors_supported = [
-        "catboost",
-        "fastai",
-        "gluon",
-        "h2o",
-        "keras",
-        "lightgbm",
-        "mleap",
-        "onnx",
-        "pyfunc",
-        "pytorch",
-        "sklearn",
-        "spacy",
-        "spark",
-        "statsmodels",
-        "tensorflow",
-        "xgboost",
-        "shap",
-        "paddle",
-        "prophet",
-        "pmdarima",
-        "diviner",
-    ]
-except ImportError as e:
-    # We are conditional loading these commands since the skinny client does
-    # not support them due to the pandas and numpy dependencies of MLflow Models
-    pass
-
+_model_flavors_supported = [
+    "catboost",
+    "fastai",
+    "gluon",
+    "h2o",
+    "keras",
+    "lightgbm",
+    "mleap",
+    "onnx",
+    "pyfunc",
+    "pytorch",
+    "sklearn",
+    "spacy",
+    "spark",
+    "statsmodels",
+    "tensorflow",
+    "xgboost",
+    "shap",
+    "paddle",
+    "prophet",
+    "pmdarima",
+    "diviner",
+]
 
 _configure_mlflow_loggers(root_module_name=__name__)
 
