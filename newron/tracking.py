@@ -77,7 +77,7 @@ def init(experiment_name, description=None):
             "Authorization": "Bearer " + auth_response["access_token"]
         }
 
-        gateway_response = requests.request("POST", PROJECT_URI, json=payload, headers=headers)
+        gateway_response = requests.request("POST", PROJECT_URI, json=payload, headers=headers).json()
         set_experiment(gateway_response["mlflow"]["experimentId"])
     else:
         raise Exception("Authentication failed")
