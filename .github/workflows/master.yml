@@ -66,3 +66,27 @@ jobs:
       run: |
         source dev/setup-ssh.sh
         ./dev/run-python-tests.sh
+        
+  flavors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.inputs.repository }}
+          ref: ${{ github.event.inputs.ref }}
+          submodules: recursive
+      - name: Increase available disk space
+        run: |
+          # Increase available disk space by removing unnecessary tool chains:
+          # https://github.com/actions/virtual-environments/issues/709#issuecomment-612569242
+          rm -rf "$AGENT_TOOLSDIRECTORY"
+      - uses: ./.github/actions/setup-python
+      - uses: ./.github/actions/setup-pyenv
+      - uses: ./.github/actions/setup-java
+      - uses: ./.github/actions/cache-pip
+      - name: Install dependencies
+        run: |
+          source ./dev/install-common-deps.sh --ml
+      - name: Run tests
+        run: |
+          ./dev/run-python-flavor-tests.sh;
