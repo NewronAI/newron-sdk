@@ -76,7 +76,7 @@ def init(experiment_name, description=None):
             "Content-Type": "application/json",
             "Authorization": "Bearer " + auth_response["access_token"]
         }
-        print(auth_response["access_token"])
+        print(auth_response)
         gateway_response = requests.request("POST", PROJECT_URI, json=payload, headers=headers).json()
         set_experiment(gateway_response["mlflow"]["experimentId"])
     else:
