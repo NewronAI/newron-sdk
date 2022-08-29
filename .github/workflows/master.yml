@@ -1,4 +1,4 @@
-name: MLflow tests
+name: Newron Tests
 
 on:
   pull_request:
