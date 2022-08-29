@@ -65,7 +65,7 @@ def init(experiment_name, description=None):
     if auth_response:
         set_tracking_uri(SERVER_URI)
         import requests
-        url = "https://grpc-api-gateway-d8q71ttn.uc.gateway.dev/v1/project"
+        url = "https://grpc-api-gateway-d8q71ttn.uc.gateway.dev/v1/set/project"
 
         payload = {}
         payload["name"] = experiment_name
