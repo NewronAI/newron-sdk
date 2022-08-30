@@ -207,6 +207,5 @@ __all__ = [
     "autolog",
     "evaluate",
     "last_active_run",
-    "MlflowClient",
     "NewronClient",
 ] + _model_flavors_supported

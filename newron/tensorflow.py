@@ -1,4 +1,5 @@
 import mlflow.tensorflow
+FLAVOR_NAME = "tensorflow"
 
 load_model = mlflow.tensorflow.load_model
 _load_pyfunc = mlflow.tensorflow._load_pyfunc
