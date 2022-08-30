@@ -8,10 +8,10 @@ import numpy as np
 
 import newron
 
-import keras
+from tensorflow import keras
 
 # pylint: disable=no-name-in-module,reimported
-if Version(keras.__version__) >= Version("2.6.0"):
+if Version(keras.__version__) >= Version("2.4.0"):
     from tensorflow.keras.models import Sequential, Model
     from tensorflow.keras.layers import Dense, Input, Concatenate
     from tensorflow.keras.optimizers import SGD

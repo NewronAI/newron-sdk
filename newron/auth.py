@@ -4,10 +4,10 @@ import time
 import webbrowser
 
 class Auth0():
-    auth0url = os.environ["AUTH_URL"]
+    auth0url = "https://dev-pg1h84k1.us.auth0.com"
     url = auth0url + '/oauth/device/code'
-    clientId = os.environ["CLIENT_ID"]
-    audience = os.environ["AUDIENCE"]
+    clientId = "qhgH8CCF8riL9XYOZr8EPym8lxq3XEd3"
+    audience = "https://grpc-api-gateway-d8q71ttn.uc.gateway.dev/"
     clientCredentials = {"client_id": clientId , "scope" : "openid email profile newron-server" , "audience" : audience}
 
     def __init__(self) -> None:

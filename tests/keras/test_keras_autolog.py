@@ -9,11 +9,12 @@ from newron import NewronClient
 from mlflow.utils.autologging_utils import BatchMetricsLogger
 from unittest.mock import patch
 
-import keras
+from tensorflow.keras import layers
+from tensorflow import keras
 
 keras_version = keras.__version__
 # pylint: disable=no-name-in-module,reimported
-if Version(keras_version) >= Version("2.6.0"):
+if Version(keras_version) >= Version("2.0.0"):
     from tensorflow.keras import layers
     from tensorflow import keras
 else:
