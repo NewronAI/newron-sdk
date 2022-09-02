@@ -586,7 +586,7 @@ def test_tf_keras_autolog_batch_metrics_logger_logs_expected_metrics(
     original = BatchMetricsLogger.record_metrics
 
     with patch(
-        "newron.utils.autologging_utils.BatchMetricsLogger.record_metrics", autospec=True
+        "mlflow.utils.autologging_utils.BatchMetricsLogger.record_metrics", autospec=True
     ) as record_metrics_mock:
 
         def record_metrics_side_effect(self, metrics, step=None):
@@ -1001,7 +1001,8 @@ def test_tf_input_example_with_dataset(tmpdir):
     directory = tmpdir.mkdir("tf_input_example_with_dataset")
     with newron.start_run() as run:
         create_tf_estimator_model(directory=str(directory), export=True, use_v1_estimator=False)
-        model_path = os.path.join(run.info.artifact_uri, "model")
+        model_path = "./mlruns" + run.info.artifact_uri.split("mlruns")[-1]
+        model_path = os.path.join(model_path, "model")
         model_conf = Model.load(os.path.join(model_path, "MLmodel"))
         input_example = _read_example(model_conf, model_path)
         pyfunc_model = newron.pyfunc.load_model(os.path.join(run.info.artifact_uri, "model"))
@@ -1025,7 +1026,8 @@ def test_tf_input_example_with_tuple_dict(tmpdir):
     directory = tmpdir.mkdir("tf_input_example_with_tuple_dict")
     with newron.start_run() as run:
         train_tf_titanic_estimator(directory=str(directory), input_data_type="tuple_dict")
-        model_path = os.path.join(run.info.artifact_uri, "model")
+        model_path = "./mlruns" + run.info.artifact_uri.split("mlruns")[-1]
+        model_path = os.path.join(model_path, "model")
         model_conf = Model.load(os.path.join(model_path, "MLmodel"))
         input_example = _read_example(model_conf, model_path)
         pyfunc_model = newron.pyfunc.load_model(os.path.join(run.info.artifact_uri, "model"))
@@ -1449,7 +1451,8 @@ def _assert_autolog_infers_model_signature_correctly(run, input_sig_spec, output
 
 
 def _assert_keras_autolog_input_example_load_and_predict_with_nparray(run, random_train_data):
-    model_path = os.path.join(run.info.artifact_uri, "model")
+    model_path = "./mlruns" + run.info.artifact_uri.split("mlruns")[-1]
+    model_path = os.path.join(model_path, "model")
     model_conf = Model.load(os.path.join(model_path, "MLmodel"))
     input_example = _read_example(model_conf, model_path)
     np.testing.assert_array_almost_equal(input_example, random_train_data[:5])
@@ -1490,7 +1493,8 @@ def test_keras_autolog_input_example_load_and_predict_with_tf_dataset(fashion_mn
     fashion_mnist_model = _create_fashion_mnist_model()
     with newron.start_run() as run:
         fashion_mnist_model.fit(fashion_mnist_tf_dataset)
-        model_path = os.path.join(run.info.artifact_uri, "model")
+        model_path = "./mlruns" + run.info.artifact_uri.split("mlruns")[-1]
+        model_path = os.path.join(model_path, "model")
         model_conf = Model.load(os.path.join(model_path, "MLmodel"))
         input_example = _read_example(model_conf, model_path)
         pyfunc_model = newron.pyfunc.load_model(os.path.join(run.info.artifact_uri, "model"))
@@ -1520,7 +1524,8 @@ def test_keras_autolog_input_example_load_and_predict_with_dict(
     model = _create_model_for_dict_mapping()
     with newron.start_run() as run:
         model.fit(random_train_dict_mapping, random_one_hot_labels)
-        model_path = os.path.join(run.info.artifact_uri, "model")
+        model_path = "./mlruns" + run.info.artifact_uri.split("mlruns")[-1]
+        model_path = os.path.join(model_path, "model")
         model_conf = Model.load(os.path.join(model_path, "MLmodel"))
         input_example = _read_example(model_conf, model_path)
         for k, v in random_train_dict_mapping.items():

@@ -1,4 +1,7 @@
 import mlflow.tensorflow
+from collections import namedtuple
+from threading import RLock
+
 FLAVOR_NAME = "tensorflow"
 
 load_model = mlflow.tensorflow.load_model
@@ -18,3 +21,6 @@ _add_to_queue = mlflow.tensorflow._add_to_queue
 _add_to_queue = mlflow.tensorflow._add_to_queue
 _get_tensorboard_callback = mlflow.tensorflow._get_tensorboard_callback
 _setup_callbacks = mlflow.tensorflow._setup_callbacks
+_metric_queue_lock = RLock()
+
+_TensorBoardLogDir = namedtuple("_TensorBoardLogDir", ["location", "is_temp"])

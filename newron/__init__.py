@@ -44,8 +44,8 @@ from newron import tracking
 from mlflow import models
 from newron import utils
 from newron import auth
-import mlflow.artifacts
-import mlflow.pipelines
+import newron.artifacts
+# import mlflow.pipelines
 
 # model flavors
 _model_flavors_supported = []
