@@ -1,6 +1,6 @@
 import mlflow.spacy
 import inspect
-from newron.utils.environment import (
+from mlflow.utils.environment import (
     _mlflow_conda_env,
     _validate_env_arguments,
     _process_pip_requirements,

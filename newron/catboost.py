@@ -6,7 +6,7 @@ import mlflow.catboost
 from newron.models import ModelSignature, ModelInputExample
 from collections import namedtuple
 import inspect
-from newron.utils.environment import (
+from mlflow.utils.environment import (
     _mlflow_conda_env,
     _validate_env_arguments,
     _process_pip_requirements,

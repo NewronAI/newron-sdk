@@ -5,7 +5,7 @@ The ``newron.tensorflow`` module provides an API for logging and loading TensorF
 import mlflow.tensorflow
 from packaging.version import Version
 from newron.models import ModelSignature, ModelInputExample
-from newron.utils.environment import (
+from mlflow.utils.environment import (
     _mlflow_conda_env,
     _validate_env_arguments,
     _process_pip_requirements,
