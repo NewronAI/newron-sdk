@@ -1,94 +1,139 @@
 import os
-import posixpath
+import inspect
+import shutil
+import subprocess
+from unittest import mock
+
 import pytest
 
+import newron
+from mlflow.utils.file_utils import path_to_local_sqlite_uri
 
-def pytest_addoption(parser):
-    parser.addoption(
-        "--requires-ssh",
-        action="store_true",
-        dest="requires_ssh",
-        default=False,
-        help="Run tests decorated with 'requires_ssh' annotation. "
-        "These tests require keys to be configured locally "
-        "for SSH authentication.",
-    )
-    parser.addoption(
-        "--ignore-flavors",
-        action="store_true",
-        dest="ignore_flavors",
-        default=False,
-        help="Ignore tests for model flavors.",
-    )
+from tests.autologging.fixtures import enable_test_mode
 
 
-def pytest_configure(config):
-    # Register markers to suppress `PytestUnknownMarkWarning`
-    config.addinivalue_line("markers", "requires_ssh")
-    config.addinivalue_line("markers", "notrackingurimock")
-    config.addinivalue_line("markers", "allow_infer_pip_requirements_fallback")
+@pytest.fixture
+def reset_mock():
+    cache = []
+
+    def set_mock(obj, attr, mock):
+        cache.append((obj, attr, getattr(obj, attr)))
+        setattr(obj, attr, mock)
+
+    yield set_mock
+
+    for obj, attr, value in cache:
+        setattr(obj, attr, value)
+    cache[:] = []
 
 
-def pytest_runtest_setup(item):
-    markers = [mark.name for mark in item.iter_markers()]
-    if "requires_ssh" in markers and not item.config.getoption("--requires-ssh"):
-        pytest.skip("use `--requires-ssh` to run this test")
+@pytest.fixture(autouse=True)
+def tracking_uri_mock(tmpdir, request):
+    try:
+        if "notrackingurimock" not in request.keywords:
+            tracking_uri = path_to_local_sqlite_uri(os.path.join(tmpdir.strpath, "mlruns.sqlite"))
+            newron.set_tracking_uri(tracking_uri)
+            os.environ["MLFLOW_TRACKING_URI"] = tracking_uri
+        yield tmpdir
+    finally:
+        newron.set_tracking_uri(None)
+        if "notrackingurimock" not in request.keywords:
+            del os.environ["MLFLOW_TRACKING_URI"]
 
 
-@pytest.hookimpl(hookwrapper=True)
-def pytest_ignore_collect(path, config):
-    outcome = yield
-    if not outcome.get_result() and config.getoption("ignore_flavors"):
-        # If not ignored by the default hook and `--ignore-flavors` specified
-
-        # Ignored files and directories must be included in dev/run-python-flavor-tests.sh
-        model_flavors = [
-            "tests/h2o",
-            "tests/keras",
-            "tests/pytorch",
-            "tests/pyfunc",
-            "tests/sagemaker",
-            "tests/sklearn",
-            "tests/spark",
-            "tests/mleap",
-            "tests/tensorflow",
-            "tests/azureml",
-            "tests/onnx",
-            "tests/gluon",
-            "tests/xgboost",
-            "tests/lightgbm",
-            "tests/catboost",
-            "tests/statsmodels",
-            "tests/spacy",
-            "tests/fastai",
-            "tests/models",
-            "tests/shap",
-            "tests/paddle",
-            "tests/prophet",
-            "tests/pmdarima",
-            "tests/diviner",
-            "tests/test_mlflow_lazily_imports_ml_packages.py",
-            "tests/utils/test_model_utils.py",
-            # this test is included here because it imports many big libraries like tf, keras, etc
-            "tests/tracking/fluent/test_fluent_autolog.py",
-            # cross flavor autologging related tests.
-            "tests/autologging/test_autologging_safety_unit.py",
-            "tests/autologging/test_autologging_behaviors_unit.py",
-            "tests/autologging/test_autologging_behaviors_integration.py",
-            "tests/autologging/test_autologging_utils.py",
-            "tests/autologging/test_training_session.py",
-        ]
-
-        relpath = os.path.relpath(str(path))
-        relpath = relpath.replace(os.sep, posixpath.sep)  # for Windows
-
-        if relpath in model_flavors:
-            outcome.force_result(True)
+@pytest.fixture(autouse=True, scope="session")
+def enable_test_mode_by_default_for_autologging_integrations():
+    """
+    Run all MLflow tests in autologging test mode, ensuring that errors in autologging patch code
+    are raised and detected. For more information about autologging test mode, see the docstring
+    for :py:func:`mlflow.utils.autologging_utils._is_testing()`.
+    """
+    yield from enable_test_mode()
 
 
-def pytest_collection_modifyitems(session, config, items):  # pylint: disable=unused-argument
-    # Executing `tests.server.test_prometheus_exporter` after `tests.server.test_handlers`
-    # results in an error because Flask >= 2.2.0 doesn't allow calling setup method such as
-    # `before_request` on the application after the first request. To avoid this issue,
-    # execute `tests.server.test_prometheus_exporter` first by reordering the test items.
-    items.sort(key=lambda item: item.module.__name__ != "tests.server.test_prometheus_exporter")
+@pytest.fixture(autouse=True)
+def clean_up_leaked_runs():
+    """
+    Certain test cases validate safety API behavior when runs are leaked. Leaked runs that
+    are not cleaned up between test cases may result in cascading failures that are hard to
+    debug. Accordingly, this fixture attempts to end any active runs it encounters and
+    throws an exception (which reported as an additional error in the pytest execution output).
+    """
+    try:
+        yield
+        assert (
+            not newron.active_run()
+        ), "test case unexpectedly leaked a run. Run info: {}. Run data: {}".format(
+            newron.active_run().info, newron.active_run().data
+        )
+    finally:
+        while newron.active_run():
+            newron.end_run()
+
+
+def _called_in_save_model():
+    for frame in inspect.stack()[::-1]:
+        if frame.function == "save_model":
+            return True
+    return False
+
+
+@pytest.fixture(autouse=True)
+def prevent_infer_pip_requirements_fallback(request):
+    """
+    Prevents `mlflow.models.infer_pip_requirements` from falling back in `mlflow.*.save_model`
+    unless explicitly disabled via `pytest.mark.allow_infer_pip_requirements_fallback`.
+    """
+    from newron.utils.environment import _INFER_PIP_REQUIREMENTS_FALLBACK_MESSAGE
+
+    def new_exception(msg, *_, **__):
+        if msg == _INFER_PIP_REQUIREMENTS_FALLBACK_MESSAGE and _called_in_save_model():
+            raise Exception(
+                "`mlflow.models.infer_pip_requirements` should not fall back in"
+                "`mlflow.*.save_model` during test"
+            )
+
+    if "allow_infer_pip_requirements_fallback" not in request.keywords:
+        with mock.patch("mlflow.utils.environment._logger.exception", new=new_exception):
+            yield
+    else:
+        yield
+
+
+@pytest.fixture(autouse=True, scope="module")
+def clean_up_mlruns_directory(request):
+    """
+    Clean up an `mlruns` directory on each test module teardown on CI to save the disk space.
+    """
+    yield
+
+    # Only run this fixture on CI.
+    if "GITHUB_ACTIONS" not in os.environ:
+        return
+
+    mlruns_dir = os.path.join(request.config.rootpath, "mlruns")
+    if os.path.exists(mlruns_dir):
+        try:
+            shutil.rmtree(mlruns_dir)
+        except IOError:
+            if os.name == "nt":
+                raise
+            # `shutil.rmtree` can't remove files owned by root in a docker container.
+            subprocess.run(["sudo", "rm", "-rf", mlruns_dir], check=True)
+
+
+@pytest.fixture
+def mock_s3_bucket():
+    """
+    Creates a mock S3 bucket using moto
+
+    :return: The name of the mock bucket
+    """
+    import boto3
+    import moto
+
+    with moto.mock_s3():
+        bucket_name = "mock-bucket"
+        s3_client = boto3.client("s3")
+        s3_client.create_bucket(Bucket=bucket_name)
+        yield bucket_name

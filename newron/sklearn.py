@@ -1,5 +1,14 @@
 import mlflow.sklearn
 
+_apis_autologging_disabled = [
+    "cross_validate",
+    "cross_val_predict",
+    "cross_val_score",
+    "learning_curve",
+    "permutation_test_score",
+    "validation_curve",
+]
+
 _gen_estimators_to_patch = mlflow.sklearn._gen_estimators_to_patch
 get_default_pip_requirements = mlflow.sklearn.get_default_pip_requirements
 get_default_conda_env = mlflow.sklearn.get_default_conda_env

@@ -3,7 +3,20 @@ The ``newron.tensorflow`` module provides an API for logging and loading TensorF
 """
 
 import mlflow.tensorflow
+from packaging.version import Version
 from newron.models import ModelSignature, ModelInputExample
+from newron.utils.environment import (
+    _mlflow_conda_env,
+    _validate_env_arguments,
+    _process_pip_requirements,
+    _process_conda_env,
+    _CONDA_ENV_FILE_NAME,
+    _REQUIREMENTS_FILE_NAME,
+    _CONSTRAINTS_FILE_NAME,
+    _PYTHON_ENV_FILE_NAME,
+    _PythonEnv,
+)
+from mlflow.utils.requirements_utils import _get_pinned_requirement
 from collections import namedtuple
 from threading import RLock
 import inspect
@@ -15,7 +28,6 @@ _load_pyfunc = mlflow.tensorflow._load_pyfunc
 _validate_saved_model = mlflow.tensorflow._validate_saved_model
 _load_tensorflow_saved_model = mlflow.tensorflow._load_tensorflow_saved_model
 _parse_flavor_configuration = mlflow.tensorflow._parse_flavor_configuration
-autolog = mlflow.tensorflow.autolog
 _TF2Wrapper = mlflow.tensorflow._TF2Wrapper
 _assoc_list_to_map = mlflow.tensorflow._assoc_list_to_map
 _flush_queue = mlflow.tensorflow._flush_queue
@@ -24,11 +36,12 @@ _add_to_queue = mlflow.tensorflow._add_to_queue
 _get_tensorboard_callback = mlflow.tensorflow._get_tensorboard_callback
 _setup_callbacks = mlflow.tensorflow._setup_callbacks
 _metric_queue_lock = RLock()
+_metric_queue = []
 
 
 def get_default_pip_requirements():
     """
-    :return: A list of default pip requirements for MLflow Models produced by this flavor.
+    :return: A list of default pip requirements for Models produced by Tensorflow.
              Calls to :func:`save_model()` and :func:`log_model()` produce a pip environment
              that, at minimum, contains these requirements.
     """
@@ -47,7 +60,7 @@ def get_default_pip_requirements():
 
 def get_default_conda_env():
     """
-    :return: The default Conda environment for MLflow Models produced by calls to
+    :return: The default Conda environment for Models produced by calls to
              :func:`save_model()` and :func:`log_model()`.
     """
     return _mlflow_conda_env(additional_pip_deps=get_default_pip_requirements())
@@ -67,7 +80,7 @@ def log_model(
     extra_pip_requirements=None,
 ):
     """
-    Log a *serialized* collection of TensorFlow graphs and variables as an MLflow model
+    Log a *serialized* collection of TensorFlow graphs and variables as an Newron model
     for the current run. This method operates on TensorFlow variables and graphs that have been
     serialized in TensorFlow's ``SavedModel`` format. For more information about ``SavedModel``
     format, see the TensorFlow documentation:
@@ -175,7 +188,7 @@ def save_model(
                       column omitted) and valid model output (e.g. model predictions generated on
                       the training dataset), for example:
                       .. code-block:: python
-                        from mlflow.models.signature import infer_signature
+                        from newron.models.signature import infer_signature
                         train = df.drop_column("target_label")
                         predictions = ... # compute model predictions
                         signature = infer_signature(train, predictions)
@@ -195,12 +208,11 @@ def save_model(
 
 def load_model(model_uri, dst_path=None):
     """
-    Load an MLflow model that contains the TensorFlow flavor from the specified path.
-    :param model_uri: The location, in URI format, of the MLflow model. For example:
+    Load an Newron model that contains the TensorFlow flavor from the specified path.
+    :param model_uri: The location, in URI format, of the Newron model. For example:
                       - ``/Users/me/path/to/local/model``
                       - ``relative/path/to/local/model``
                       - ``s3://my_bucket/path/to/model``
-                      - ``runs:/<mlflow_run_id>/run-relative/path/to/model``
                       - ``models:/<model_name>/<model_version>``
                       - ``models:/<model_name>/<stage>``
                       For more information about supported URI schemes, see
@@ -212,12 +224,12 @@ def load_model(model_uri, dst_path=None):
     :return: A callable graph (tf.function) that takes inputs and returns inferences.
     .. code-block:: python
         :caption: Example
-        import mlflow.tensorflow
+        import newron.tensorflow
         import tensorflow as tf
         tf_graph = tf.Graph()
         tf_sess = tf.Session(graph=tf_graph)
         with tf_graph.as_default():
-            signature_definition = mlflow.tensorflow.load_model(model_uri="model_uri",
+            signature_definition = newron.tensorflow.load_model(model_uri="model_uri",
                                     tf_sess=tf_sess)
             input_tensors = [tf_graph.get_tensor_by_name(input_signature.name)
                                 for _, input_signature in signature_definition.inputs.items()]
@@ -242,7 +254,7 @@ def autolog(
 ):  # pylint: disable=unused-argument
     # pylint: disable=E0611
     """
-    Enables automatic logging from TensorFlow to MLflow.
+    Enables automatic logging from TensorFlow to Newron.
     Note that autologging for ``tf.keras`` is handled by :py:func:`mlflow.tensorflow.autolog`,
     not :py:func:`mlflow.keras.autolog`.
     As an example, try running the
@@ -267,7 +279,7 @@ def autolog(
       - TensorBoard metrics: ``average_loss``, ``loss``, etc
       - Parameters ``steps`` and ``max_steps``
      - **Artifacts**
-      - `MLflow Model <https://mlflow.org/docs/latest/models.html>`_ (TF saved model) on call
+      - `Newron Model <https://newron.org/docs/latest/models.html>`_ (TF saved model) on call
         to ``tf.estimator.export_saved_model``
     **TensorFlow Core**
      - **Metrics**
@@ -277,7 +289,7 @@ def autolog(
     <https://www.mlflow.org/docs/latest/tracking.html#tensorflow-and-keras-experimental>`_.
     :param every_n_iter: The frequency with which metrics should be logged. For example, a value of
                          100 will log metrics at step 0, 100, 200, etc.
-    :param log_models: If ``True``, trained models are logged as MLflow model artifacts.
+    :param log_models: If ``True``, trained models are logged as Newron model artifacts.
                        If ``False``, trained models are not logged.
     :param disable: If ``True``, disables the TensorFlow autologging integration. If ``False``,
                     enables the TensorFlow integration autologging integration.
@@ -285,9 +297,9 @@ def autolog(
                       If ``False``, autologged content is logged to the active fluent run,
                       which may be user-created.
     :param disable_for_unsupported_versions: If ``True``, disable autologging for versions of
-                      tensorflow that have not been tested against this version of the MLflow
+                      tensorflow that have not been tested against this version of the Newron
                       client or are incompatible.
-    :param silent: If ``True``, suppress all event logs and warnings from MLflow during TensorFlow
+    :param silent: If ``True``, suppress all event logs and warnings from Newron during TensorFlow
                    autologging. If ``False``, show all events and warnings during TensorFlow
                    autologging.
     :param registered_model_name: If given, each time a model is trained, it is registered as a
