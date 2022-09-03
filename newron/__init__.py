@@ -41,7 +41,7 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
 from mlflow import projects
 from newron import tracking
-from mlflow import models
+from newron import models
 from newron import utils
 from newron import auth
 import newron.artifacts
