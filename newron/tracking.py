@@ -78,6 +78,6 @@ def init(experiment_name, description=None):
         }
         print(auth_response)
         gateway_response = requests.request("POST", PROJECT_URI, json=payload, headers=headers).json()
-        #set_experiment(gateway_response["mlflow"]["experimentId"])
+        set_experiment(int(gateway_response["mlflow"]["experimentId"]))
     else:
         raise Exception("Authentication failed")
