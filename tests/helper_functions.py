@@ -18,6 +18,7 @@ import yaml
 import pytest
 
 import newron
+import mlflow
 from mlflow.tracking.artifact_utils import _download_artifact_from_uri
 from mlflow.utils.file_utils import read_yaml, write_yaml
 from mlflow.utils.environment import (

@@ -8,6 +8,7 @@ import pandas as pd
 import pytest
 import re
 import contextlib
+import mlflow
 from packaging.version import Version
 
 import sklearn
@@ -138,9 +139,9 @@ def test_autolog_preserves_original_function_attributes():
                 attrs[method_name] = get_func_attrs(attr)
         return attrs
 
-    before = [get_cls_attrs(cls) for _, cls in newron.sklearn.utils._all_estimators()]
+    before = [get_cls_attrs(cls) for _, cls in mlflow.sklearn.utils._all_estimators()]
     newron.sklearn.autolog()
-    after = [get_cls_attrs(cls) for _, cls in newron.sklearn.utils._all_estimators()]
+    after = [get_cls_attrs(cls) for _, cls in mlflow.sklearn.utils._all_estimators()]
 
     for b, a in zip(before, after):
         assert b == a
@@ -165,7 +166,7 @@ def test_autolog_throws_error_with_negative_max_tuning_runs():
     ],
 )
 def test_autolog_max_tuning_runs_logs_info_correctly(max_tuning_runs, total_runs, output_statement):
-    with mock.patch("newron.sklearn.utils._logger.info") as mock_info:
+    with mock.patch("mlflow.sklearn.utils._logger.info") as mock_info:
         _log_child_runs_info(max_tuning_runs, total_runs)
         mock_info.assert_called_once()
         mock_info.called_once_with(output_statement)
@@ -664,7 +665,7 @@ def test_autolog_emits_warning_message_when_score_fails():
 
     model.score = throwing_score
 
-    with newron.start_run(), mock.patch("newron.sklearn.utils._logger.warning") as mock_warning:
+    with newron.start_run(), mock.patch("mlflow.sklearn.utils._logger.warning") as mock_warning:
         model.fit(*get_iris())
         mock_warning.assert_called_once()
         mock_warning.called_once_with(
@@ -686,7 +687,7 @@ def test_autolog_emits_warning_message_when_metric_fails():
         raise Exception("EXCEPTION")
 
     with newron.start_run(), mock.patch(
-        "newron.sklearn.utils._logger.warning"
+        "mlflow.sklearn.utils._logger.warning"
     ) as mock_warning, mock.patch("sklearn.metrics.precision_score", side_effect=throwing_metrics):
         model.fit(*get_iris())
         mock_warning.assert_called_once()
@@ -714,7 +715,7 @@ def test_autolog_emits_warning_message_when_model_prediction_fails():
         for i in range(metrics_size)
     }
 
-    with newron.start_run(), mock.patch("newron.sklearn.utils._logger.warning") as mock_warning:
+    with newron.start_run(), mock.patch("mlflow.sklearn.utils._logger.warning") as mock_warning:
         svc = sklearn.svm.SVC()
         cv_model = sklearn.model_selection.GridSearchCV(
             svc, {"C": [1]}, n_jobs=1, scoring=metrics_to_log, refit=False
@@ -736,7 +737,7 @@ def test_autolog_emits_warning_message_when_model_prediction_fails():
         # If `_is_plotting_supported` returns True (meaning sklearn version is >= 0.22.0),
         # `mock_warning` should have been called twice, once for metrics, once for artifacts.
         # Otherwise, only once for metrics.
-        call_count_expected = 2 if newron.sklearn.utils._is_plotting_supported() else 1
+        call_count_expected = 2 if mlflow.sklearn.utils._is_plotting_supported() else 1
         assert call_count == call_count_expected
 
 
@@ -1158,10 +1159,10 @@ def test_autolog_produces_expected_results_for_estimator_when_parent_also_define
             super().fit(X, y)
             self.prediction = self.prediction + 1
 
-    og_all_estimators = newron.sklearn.utils._all_estimators()
+    og_all_estimators = mlflow.sklearn.utils._all_estimators()
     new_all_estimators = og_all_estimators + [("ParentMod", ParentMod), ("ChildMod", ChildMod)]
 
-    with mock.patch("newron.sklearn.utils._all_estimators", return_value=new_all_estimators):
+    with mock.patch("mlflow.sklearn.utils._all_estimators", return_value=new_all_estimators):
         newron.sklearn.autolog()
 
     model = ChildMod()
@@ -2095,7 +2096,7 @@ def test_autolog_emits_warning_message_when_pos_label_used_for_multilabel():
     model = sklearn.svm.SVC()
     X, y = get_iris()
 
-    with newron.start_run(), mock.patch("newron.sklearn.utils._logger.warning") as mock_warning:
+    with newron.start_run(), mock.patch("mlflow.sklearn.utils._logger.warning") as mock_warning:
         model.fit(X, y)
         assert mock_warning.call_count == 3  # for precision, recall and f1_score
         mock_warning.assert_any_call(

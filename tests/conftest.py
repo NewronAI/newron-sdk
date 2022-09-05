@@ -7,6 +7,7 @@ from unittest import mock
 import pytest
 
 import newron
+import mlflow
 from mlflow.utils.file_utils import path_to_local_sqlite_uri
 
 from tests.autologging.fixtures import enable_test_mode
@@ -84,7 +85,7 @@ def prevent_infer_pip_requirements_fallback(request):
     Prevents `mlflow.models.infer_pip_requirements` from falling back in `mlflow.*.save_model`
     unless explicitly disabled via `pytest.mark.allow_infer_pip_requirements_fallback`.
     """
-    from newron.utils.environment import _INFER_PIP_REQUIREMENTS_FALLBACK_MESSAGE
+    from mlflow.utils.environment import _INFER_PIP_REQUIREMENTS_FALLBACK_MESSAGE
 
     def new_exception(msg, *_, **__):
         if msg == _INFER_PIP_REQUIREMENTS_FALLBACK_MESSAGE and _called_in_save_model():
