@@ -41,7 +41,8 @@ _metric_queue = []
 
 def get_default_pip_requirements():
     """
-    :return: A list of default pip requirements for Models produced by Tensorflow.
+    Returns: 
+            A list of default pip requirements for Models produced by Tensorflow.
              Calls to :func:`save_model()` and :func:`log_model()` produce a pip environment
              that, at minimum, contains these requirements.
     """
@@ -60,7 +61,8 @@ def get_default_pip_requirements():
 
 def get_default_conda_env():
     """
-    :return: The default Conda environment for Models produced by calls to
+    Returns: 
+            The default Conda environment for Models produced by calls to
              :func:`save_model()` and :func:`log_model()`.
     """
     return _mlflow_conda_env(additional_pip_deps=get_default_pip_requirements())
@@ -96,26 +98,28 @@ def log_model(
     DataFrame.
     Note that this method should not be used to log a ``tf.keras`` model. Use
     :py:func:`mlflow.keras.log_model` instead.
-    :param tf_saved_model_dir: Path to the directory containing serialized TensorFlow variables and
+
+    Args:
+        tf_saved_model_dir: Path to the directory containing serialized TensorFlow variables and
                                graphs in ``SavedModel`` format.
-    :param tf_meta_graph_tags: A list of tags identifying the model's metagraph within the
+        tf_meta_graph_tags: A list of tags identifying the model's metagraph within the
                                serialized ``SavedModel`` object. For more information, see the
                                ``tags`` parameter of the
                                ``tf.saved_model.builder.SavedModelBuilder`` method.
-    :param tf_signature_def_key: A string identifying the input/output signature associated with the
+        tf_signature_def_key: A string identifying the input/output signature associated with the
                                  model. This is a key within the serialized ``SavedModel`` signature
                                  definition mapping. For more information, see the
                                  ``signature_def_map`` parameter of the
                                  ``tf.saved_model.builder.SavedModelBuilder`` method.
-    :param artifact_path: The run-relative path to which to log model artifacts.
-    :param conda_env: {{ conda_env }}
-    :param code_paths: A list of local filesystem paths to Python file dependencies (or directories
+        artifact_path: The run-relative path to which to log model artifacts.
+        conda_env: {{ conda_env }}
+        code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
-    :param registered_model_name: If given, create a model version under
+        registered_model_name: If given, create a model version under
                                   ``registered_model_name``, also creating a registered model if one
                                   with the given name does not exist.
-    :param signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
+        signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
                       describes model input and output :py:class:`Schema <mlflow.types.Schema>`.
                       The model signature can be :py:func:`inferred <mlflow.models.infer_signature>`
                       from datasets with valid model input (e.g. the training dataset with target
@@ -126,18 +130,20 @@ def log_model(
                         train = df.drop_column("target_label")
                         predictions = ... # compute model predictions
                         signature = infer_signature(train, predictions)
-    :param input_example: Input example provides one or several instances of valid
+        input_example: Input example provides one or several instances of valid
                           model input. The example can be used as a hint of what data to feed the
                           model. The given example can be a Pandas DataFrame where the given
                           example will be serialized to json using the Pandas split-oriented
                           format, or a numpy array where the example will be serialized to json
                           by converting it to a list. Bytes are base64-encoded.
-    :param await_registration_for: Number of seconds to wait for the model version to finish
+        await_registration_for: Number of seconds to wait for the model version to finish
                             being created and is in ``READY`` status. By default, the function
                             waits for five minutes. Specify 0 or None to skip waiting.
-    :param pip_requirements: {{ pip_requirements }}
-    :param extra_pip_requirements: {{ extra_pip_requirements }}
-    :return: A :py:class:`ModelInfo <mlflow.models.model.ModelInfo>` instance that contains the
+        pip_requirements: {{ pip_requirements }}
+        extra_pip_requirements: {{ extra_pip_requirements }}
+
+    Returns: 
+            A :py:class:`ModelInfo <mlflow.models.model.ModelInfo>` instance that contains the
              metadata of the logged model.
     """
     frame = inspect.currentframe()
@@ -164,24 +170,26 @@ def save_model(
     serialized in TensorFlow's ``SavedModel`` format. For more information about ``SavedModel``
     format, see the TensorFlow documentation:
     https://www.tensorflow.org/guide/saved_model#save_and_restore_models.
-    :param tf_saved_model_dir: Path to the directory containing serialized TensorFlow variables and
+
+    Args:
+        tf_saved_model_dir: Path to the directory containing serialized TensorFlow variables and
                                graphs in ``SavedModel`` format.
-    :param tf_meta_graph_tags: A list of tags identifying the model's metagraph within the
+        tf_meta_graph_tags: A list of tags identifying the model's metagraph within the
                                serialized ``SavedModel`` object. For more information, see the
                                ``tags`` parameter of the
                                ``tf.saved_model.builder.savedmodelbuilder`` method.
-    :param tf_signature_def_key: A string identifying the input/output signature associated with the
+        tf_signature_def_key: A string identifying the input/output signature associated with the
                                  model. This is a key within the serialized ``savedmodel``
                                  signature definition mapping. For more information, see the
                                  ``signature_def_map`` parameter of the
                                  ``tf.saved_model.builder.savedmodelbuilder`` method.
-    :param path: Local path where the MLflow model is to be saved.
-    :param mlflow_model: MLflow model configuration to which to add the ``tensorflow`` flavor.
-    :param conda_env: {{ conda_env }}
-    :param code_paths: A list of local filesystem paths to Python file dependencies (or directories
+        path: Local path where the MLflow model is to be saved.
+        mlflow_model: MLflow model configuration to which to add the ``tensorflow`` flavor.
+        conda_env: {{ conda_env }}
+        code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
-    :param signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
+        signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
                       describes model input and output :py:class:`Schema <mlflow.types.Schema>`.
                       The model signature can be :py:func:`inferred <mlflow.models.infer_signature>`
                       from datasets with valid model input (e.g. the training dataset with target
@@ -192,14 +200,14 @@ def save_model(
                         train = df.drop_column("target_label")
                         predictions = ... # compute model predictions
                         signature = infer_signature(train, predictions)
-    :param input_example: Input example provides one or several instances of valid
+        input_example: Input example provides one or several instances of valid
                           model input. The example can be used as a hint of what data to feed the
                           model. The given example can be a Pandas DataFrame where the given
                           example will be serialized to json using the Pandas split-oriented
                           format, or a numpy array where the example will be serialized to json
                           by converting it to a list. Bytes are base64-encoded.
-    :param pip_requirements: {{ pip_requirements }}
-    :param extra_pip_requirements: {{ extra_pip_requirements }}
+        pip_requirements: {{ pip_requirements }}
+        extra_pip_requirements: {{ extra_pip_requirements }}
     """
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
@@ -209,7 +217,8 @@ def save_model(
 def load_model(model_uri, dst_path=None):
     """
     Load an Newron model that contains the TensorFlow flavor from the specified path.
-    :param model_uri: The location, in URI format, of the Newron model. For example:
+    Args:
+        model_uri: The location, in URI format, of the Newron model. For example:
                       - ``/Users/me/path/to/local/model``
                       - ``relative/path/to/local/model``
                       - ``s3://my_bucket/path/to/model``
@@ -218,10 +227,11 @@ def load_model(model_uri, dst_path=None):
                       For more information about supported URI schemes, see
                       `Referencing Artifacts <https://www.mlflow.org/docs/latest/concepts.html#
                       artifact-locations>`_.
-    :param dst_path: The local filesystem path to which to download the model artifact.
+        dst_path: The local filesystem path to which to download the model artifact.
                      This directory must already exist. If unspecified, a local output
                      path will be created.
-    :return: A callable graph (tf.function) that takes inputs and returns inferences.
+    Returns: 
+            A callable graph (tf.function) that takes inputs and returns inferences.
     .. code-block:: python
         :caption: Example
         import newron.tensorflow
@@ -287,28 +297,30 @@ def autolog(
     Refer to the autologging tracking documentation for more
     information on `TensorFlow workflows
     <https://www.mlflow.org/docs/latest/tracking.html#tensorflow-and-keras-experimental>`_.
-    :param every_n_iter: The frequency with which metrics should be logged. For example, a value of
+    
+    Args:
+        every_n_iter: The frequency with which metrics should be logged. For example, a value of
                          100 will log metrics at step 0, 100, 200, etc.
-    :param log_models: If ``True``, trained models are logged as Newron model artifacts.
+        log_models: If ``True``, trained models are logged as Newron model artifacts.
                        If ``False``, trained models are not logged.
-    :param disable: If ``True``, disables the TensorFlow autologging integration. If ``False``,
+        disable: If ``True``, disables the TensorFlow autologging integration. If ``False``,
                     enables the TensorFlow integration autologging integration.
-    :param exclusive: If ``True``, autologged content is not logged to user-created fluent runs.
+        exclusive: If ``True``, autologged content is not logged to user-created fluent runs.
                       If ``False``, autologged content is logged to the active fluent run,
                       which may be user-created.
-    :param disable_for_unsupported_versions: If ``True``, disable autologging for versions of
+        disable_for_unsupported_versions: If ``True``, disable autologging for versions of
                       tensorflow that have not been tested against this version of the Newron
                       client or are incompatible.
-    :param silent: If ``True``, suppress all event logs and warnings from Newron during TensorFlow
+        silent: If ``True``, suppress all event logs and warnings from Newron during TensorFlow
                    autologging. If ``False``, show all events and warnings during TensorFlow
                    autologging.
-    :param registered_model_name: If given, each time a model is trained, it is registered as a
+        registered_model_name: If given, each time a model is trained, it is registered as a
                                   new model version of the registered model with this name.
                                   The registered model is created if it does not already exist.
-    :param log_input_examples: If ``True``, input examples from training datasets are collected and
+        log_input_examples: If ``True``, input examples from training datasets are collected and
                                logged along with tf/keras model artifacts during training. If
                                ``False``, input examples are not logged.
-    :param log_model_signatures: If ``True``,
+        log_model_signatures: If ``True``,
                                  :py:class:`ModelSignatures <mlflow.models.ModelSignature>`
                                  describing model inputs and outputs are collected and logged along
                                  with tf/keras model artifacts during training. If ``False``,
