@@ -35,5 +35,7 @@ jobs:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
           src_path: /docs/sources/api
           dst_path: /docs/pages/
+          src_branch: main
+          dst_branch: main
           dst_owner: ${{ secrets.ORGANISATION }}
           dst_repo_name: ${{ secrets.REPOSITORY }}
