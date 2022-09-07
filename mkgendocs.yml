@@ -1,0 +1,32 @@
+sources_dir: docs/sources
+templates_dir: docs/templates
+repo: https://github.com/NewronAI/NewronSDK  #link to sources on github
+version: main                               #link to sources on github
+
+pages:
+  - page: "api/tensowrflow.md"
+    source: "newron/tensorflow.py"
+    functions:
+      - autolog
+      - load_model
+      - save_model
+      - log_model
+  - page: "api/spacy.md"
+    source: "newron/spacy.py"
+    functions:
+      - load_model
+      - save_model
+      - log_model
+  - page: "api/sklearn.md"
+    source: "newron/sklearn.py"
+    functions:
+      - autolog
+      - load_model
+      - save_model
+      - log_model
+  - page: "api/prophet.md"
+    source: "newron/prophet.py"
+    functions:
+      - load_model
+      - save_model
+      - log_model

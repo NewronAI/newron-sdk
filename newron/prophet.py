@@ -30,7 +30,8 @@ _save_model = mlflow.prophet._save_model
 
 def get_default_pip_requirements():
     """
-    :return: A list of default pip requirements for MLflow Models produced by this flavor.
+    Returns:
+        A list of default pip requirements for MLflow Models produced by this flavor.
              Calls to :func:`save_model()` and :func:`log_model()` produce a pip environment
              that, at a minimum, contains these requirements.
     """
@@ -43,7 +44,8 @@ def get_default_pip_requirements():
 
 def get_default_conda_env():
     """
-    :return: The default Conda environment for MLflow Models produced by calls to
+    Returns:
+        The default Conda environment for MLflow Models produced by calls to
              :func:`save_model()` and :func:`log_model()`.
     """
     return _mlflow_conda_env(additional_pip_deps=get_default_pip_requirements())
@@ -61,15 +63,17 @@ def save_model(
 ):
     """
     Save a Prophet model to a path on the local file system.
-    :param pr_model: Prophet model (an instance of Prophet() forecaster that has been fit
+    
+    Args:
+        pr_model: Prophet model (an instance of Prophet() forecaster that has been fit
                      on a temporal series.
-    :param path: Local path where the serialized model (as JSON) is to be saved.
-    :param conda_env: {{ conda_env }}
-    :param code_paths: A list of local filesystem paths to Python file dependencies (or directories
+        path: Local path where the serialized model (as JSON) is to be saved.
+        conda_env: {{ conda_env }}
+        code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
-    :param mlflow_model: :py:mod:`mlflow.models.Model` this flavor is being added to.
-    :param signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
+        mlflow_model: :py:mod:`mlflow.models.Model` this flavor is being added to.
+        signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
                       describes model input and output :py:class:`Schema <mlflow.types.Schema>`.
                       The model signature can be :py:func:`inferred <mlflow.models.infer_signature>`
                       from datasets with valid model input (e.g. the training dataset with target
@@ -81,13 +85,13 @@ def save_model(
                         train = model.history
                         predictions = model.predict(model.make_future_dataframe(30))
                         signature = infer_signature(train, predictions)
-    :param input_example: Input example provides one or several instances of valid
+        input_example: Input example provides one or several instances of valid
                           model input. The example can be used as a hint of what data to feed the
                           model. The given example will be converted to a Pandas DataFrame and then
                           serialized to json using the Pandas split-oriented format. Bytes are
                           base64-encoded.
-    :param pip_requirements: {{ pip_requirements }}
-    :param extra_pip_requirements: {{ extra_pip_requirements }}
+        pip_requirements: {{ pip_requirements }}
+        extra_pip_requirements: {{ extra_pip_requirements }}
     """
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
@@ -108,17 +112,17 @@ def log_model(
 ):
     """
     Log a Prophet model as an MLflow artifact for the current run.
-    :param pr_model: Prophet model to be saved.
-    :param artifact_path: Run-relative artifact path.
-    :param conda_env: {{ conda_env }}
-    :param code_paths: A list of local filesystem paths to Python file dependencies (or directories
+        pr_model: Prophet model to be saved.
+        artifact_path: Run-relative artifact path.
+        conda_env: {{ conda_env }}
+        code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
-    :param registered_model_name: This argument may change or be removed in a
+        registered_model_name: This argument may change or be removed in a
                                   future release without warning. If given, create a model
                                   version under ``registered_model_name``, also creating a
                                   registered model if one with the given name does not exist.
-    :param signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
+        signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
                       describes model input and output
                       :py:class:`Schema <mlflow.types.Schema>`.
                       The model signature can be :py:func:`inferred
@@ -132,18 +136,19 @@ def log_model(
                         train = model.history
                         predictions = model.predict(model.make_future_dataframe(30))
                         signature = infer_signature(train, predictions)
-    :param input_example: Input example provides one or several instances of valid
+        input_example: Input example provides one or several instances of valid
                           model input. The example can be used as a hint of what data to
                           feed the model. The given example will be converted to a
                           Pandas DataFrame and then serialized to json using the
                           Pandas split-oriented format. Bytes are base64-encoded.
-    :param await_registration_for: Number of seconds to wait for the model version
+        await_registration_for: Number of seconds to wait for the model version
                         to finish being created and is in ``READY`` status.
                         By default, the function waits for five minutes.
                         Specify 0 or None to skip waiting.
-    :param pip_requirements: {{ pip_requirements }}
-    :param extra_pip_requirements: {{ extra_pip_requirements }}
-    :return: A :py:class:`ModelInfo <mlflow.models.model.ModelInfo>` instance that contains the
+        pip_requirements: {{ pip_requirements }}
+        extra_pip_requirements: {{ extra_pip_requirements }}
+    Returns:
+        A :py:class:`ModelInfo <mlflow.models.model.ModelInfo>` instance that contains the
              metadata of the logged model.
     """
     frame = inspect.currentframe()
@@ -154,7 +159,7 @@ def log_model(
 def load_model(model_uri, dst_path=None):
     """
     Load a Prophet model from a local file or a run.
-    :param model_uri: The location, in URI format, of the MLflow model. For example:
+        model_uri: The location, in URI format, of the MLflow model. For example:
                       - ``/Users/me/path/to/local/model``
                       - ``relative/path/to/local/model``
                       - ``s3://my_bucket/path/to/model``
@@ -162,10 +167,11 @@ def load_model(model_uri, dst_path=None):
                       For more information about supported URI schemes, see
                       `Referencing Artifacts <https://www.mlflow.org/docs/latest/tracking.html#
                       artifact-locations>`_.
-    :param dst_path: The local filesystem path to which to download the model artifact.
+        dst_path: The local filesystem path to which to download the model artifact.
                      This directory must already exist. If unspecified, a local output
                      path will be created.
-    :return: A Prophet model instance
+    Returns:
+        A Prophet model instance
     """
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)

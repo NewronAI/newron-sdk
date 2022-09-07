@@ -29,7 +29,9 @@ _load_pyfunc = mlflow.spacy._load_pyfunc
 
 def get_default_pip_requirements():
     """
-    :return: A list of default pip requirements for MLflow Models produced by this flavor.
+    
+    Returns:
+        A list of default pip requirements for MLflow Models produced by this flavor.
              Calls to :func:`save_model()` and :func:`log_model()` produce a pip environment
              that, at minimum, contains these requirements.
     """
@@ -38,7 +40,9 @@ def get_default_pip_requirements():
 
 def get_default_conda_env():
     """
-    :return: The default Conda environment for MLflow Models produced by calls to
+    
+    Returns:
+        The default Conda environment for MLflow Models produced by calls to
              :func:`save_model()` and :func:`log_model()`.
     """
     return _mlflow_conda_env(additional_pip_deps=get_default_pip_requirements())
@@ -56,14 +60,16 @@ def save_model(
 ):
     """
     Save a spaCy model to a path on the local file system.
-    :param spacy_model: spaCy model to be saved.
-    :param path: Local path where the model is to be saved.
-    :param conda_env: {{ conda_env }}
-    :param code_paths: A list of local filesystem paths to Python file dependencies (or directories
+
+    Args:
+        spacy_model: spaCy model to be saved.
+        path: Local path where the model is to be saved.
+        conda_env: {{ conda_env }}
+        code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
-    :param mlflow_model: :py:mod:`mlflow.models.Model` this flavor is being added to.
-    :param signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
+        mlflow_model: :py:mod:`mlflow.models.Model` this flavor is being added to.
+        signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
                       describes model input and output :py:class:`Schema <mlflow.types.Schema>`.
                       The model signature can be :py:func:`inferred <mlflow.models.infer_signature>`
                       from datasets with valid model input (e.g. the training dataset with target
@@ -74,13 +80,13 @@ def save_model(
                         train = df.drop_column("target_label")
                         predictions = ... # compute model predictions
                         signature = infer_signature(train, predictions)
-    :param input_example: Input example provides one or several instances of valid
+        input_example: Input example provides one or several instances of valid
                           model input. The example can be used as a hint of what data to feed the
                           model. The given example will be converted to a Pandas DataFrame and then
                           serialized to json using the Pandas split-oriented format. Bytes are
                           base64-encoded.
-    :param pip_requirements: {{ pip_requirements }}
-    :param extra_pip_requirements: {{ extra_pip_requirements }}
+        pip_requirements: {{ pip_requirements }}
+        extra_pip_requirements: {{ extra_pip_requirements }}
     """
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
@@ -101,16 +107,18 @@ def log_model(
 ):
     """
     Log a spaCy model as an MLflow artifact for the current run.
-    :param spacy_model: spaCy model to be saved.
-    :param artifact_path: Run-relative artifact path.
-    :param conda_env: {{ conda_env }}
-    :param code_paths: A list of local filesystem paths to Python file dependencies (or directories
+
+    Args:
+        spacy_model: spaCy model to be saved.
+        artifact_path: Run-relative artifact path.
+        conda_env: {{ conda_env }}
+        code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
-    :param registered_model_name: If given, create a model version under
+        registered_model_name: If given, create a model version under
                                   ``registered_model_name``, also creating a registered model if one
                                   with the given name does not exist.
-    :param signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
+        signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
                       describes model input and output :py:class:`Schema <mlflow.types.Schema>`.
                       The model signature can be :py:func:`inferred <mlflow.models.infer_signature>`
                       from datasets with valid model input (e.g. the training dataset with target
@@ -121,15 +129,17 @@ def log_model(
                         train = df.drop_column("target_label")
                         predictions = ... # compute model predictions
                         signature = infer_signature(train, predictions)
-    :param input_example: Input example provides one or several instances of valid
+        input_example: Input example provides one or several instances of valid
                           model input. The example can be used as a hint of what data to feed the
                           model. The given example will be converted to a Pandas DataFrame and then
                           serialized to json using the Pandas split-oriented format. Bytes are
                           base64-encoded.
-    :param pip_requirements: {{ pip_requirements }}
-    :param extra_pip_requirements: {{ extra_pip_requirements }}
-    :param kwargs: kwargs to pass to ``spacy.save_model`` method.
-    :return: A :py:class:`ModelInfo <mlflow.models.model.ModelInfo>` instance that contains the
+        pip_requirements: {{ pip_requirements }}
+        extra_pip_requirements: {{ extra_pip_requirements }}
+        kwargs: kwargs to pass to ``spacy.save_model`` method.
+        
+    Returns:
+        A :py:class:`ModelInfo <mlflow.models.model.ModelInfo>` instance that contains the
              metadata of the logged model.
     """
     frame = inspect.currentframe()
@@ -141,7 +151,8 @@ def log_model(
 def load_model(model_uri, dst_path=None):
     """
     Load a spaCy model from a local file (if ``run_id`` is ``None``) or a run.
-    :param model_uri: The location, in URI format, of the MLflow model. For example:
+    Args:    
+        model_uri: The location, in URI format, of the MLflow model. For example:
                       - ``/Users/me/path/to/local/model``
                       - ``relative/path/to/local/model``
                       - ``s3://my_bucket/path/to/model``
@@ -151,10 +162,12 @@ def load_model(model_uri, dst_path=None):
                       For more information about supported URI schemes, see
                       `Referencing Artifacts <https://www.mlflow.org/docs/latest/concepts.html#
                       artifact-locations>`_.
-    :param dst_path: The local filesystem path to which to download the model artifact.
+        dst_path: The local filesystem path to which to download the model artifact.
                      This directory must already exist. If unspecified, a local output
                      path will be created.
-    :return: A spaCy loaded model
+                     
+    Returns:
+        A spaCy loaded model
     """
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
