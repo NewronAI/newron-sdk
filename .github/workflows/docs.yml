@@ -27,8 +27,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install mkgendocs
         run: pip install mkgendocs
-      - name: Add Origin
-        run: git remote add origin https://${{ secrets.USERNAME }}:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ secrets.ORGANISATION }}/${{ secrets.REPOSITORY }}.git
+      - name: Set-URL Origin
+        run: git remote set-url origin https://${{ secrets.USERNAME }}:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ secrets.ORGANISATION }}/${{ secrets.REPOSITORY }}.git
       - name: Generate Docs
         run: gendocs --config mkgendocs.yml
       - name: Copy
