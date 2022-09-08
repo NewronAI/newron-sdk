@@ -4,13 +4,6 @@ repo: https://github.com/NewronAI/NewronSDK  #link to sources on github
 version: main                               #link to sources on github
 
 pages:
-  - page: "api/tensowrflow.mdx"
-    source: "newron/tensorflow.py"
-    functions:
-      - autolog
-      - load_model
-      - save_model
-      - log_model
   - page: "api/spacy.mdx"
     source: "newron/spacy.py"
     functions:
