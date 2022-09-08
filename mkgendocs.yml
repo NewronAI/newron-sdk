@@ -4,27 +4,27 @@ repo: https://github.com/NewronAI/NewronSDK  #link to sources on github
 version: main                               #link to sources on github
 
 pages:
-  - page: "api/tensowrflow.md"
+  - page: "api/tensowrflow.mdx"
     source: "newron/tensorflow.py"
     functions:
       - autolog
       - load_model
       - save_model
       - log_model
-  - page: "api/spacy.md"
+  - page: "api/spacy.mdx"
     source: "newron/spacy.py"
     functions:
       - load_model
       - save_model
       - log_model
-  - page: "api/sklearn.md"
+  - page: "api/sklearn.mdx"
     source: "newron/sklearn.py"
     functions:
       - autolog
       - load_model
       - save_model
       - log_model
-  - page: "api/prophet.md"
+  - page: "api/prophet.mdx"
     source: "newron/prophet.py"
     functions:
       - load_model
