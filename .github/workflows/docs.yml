@@ -34,7 +34,7 @@ jobs:
       - name: Copy
         uses: ./.github/actions/copycat
         with:
-          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+          personal_token: ${{ secrets.REPO_ACCESS_TOKEN }}
           src_path: /docs/sources/api
           dst_path: /docs/pages/
           src_branch: main
