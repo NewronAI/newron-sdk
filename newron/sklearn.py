@@ -216,14 +216,14 @@ def load_model(model_uri, dst_path=None):
     """
     Load a scikit-learn model from a local file or a run.
     :param model_uri: The location, in URI format, of the MLflow model, for example:
-                      - ``/Users/me/path/to/local/model``
-                      - ``relative/path/to/local/model``
-                      - ``s3://my_bucket/path/to/model``
-                      - ``runs:/<mlflow_run_id>/run-relative/path/to/model``
-                      - ``models:/<model_name>/<model_version>``
-                      - ``models:/<model_name>/<stage>``
+                      - ``\Users\me\path\to\local\model``
+                      - ``relative\path\to\local\model``
+                      - ``s3:\\my_bucket\path\to\model``
+                      - ``runs:\<mlflow_run_id>\run-relative\path\to\model``
+                      - ``models:\<model_name>\<model_version>``
+                      - ``models:\<model_name>\<stage>``
                       For more information about supported URI schemes, see
-                      `Referencing Artifacts <https://www.mlflow.org/docs/latest/concepts.html#
+                      `Referencing Artifacts <https:\\www.mlflow.org\docs\latest\concepts.html#
                       artifact-locations>`.
     :param dst_path: The local filesystem path to which to download the model artifact.
                      This directory must already exist. If unspecified, a local output
@@ -232,7 +232,7 @@ def load_model(model_uri, dst_path=None):
     .. code-block:: python
         :caption: Example
         import mlflow.sklearn
-        sk_model = mlflow.sklearn.load_model("runs:/96771d893a5e46159d9f3b49bf9013e2/sk_models")
+        sk_model = mlflow.sklearn.load_model("runs:\96771d893a5e46159d9f3b49bf9013e2\sk_models")
         # use Pandas DataFrame to make predictions
         pandas_df = ...
         predictions = sk_model.predict(pandas_df)
@@ -245,13 +245,13 @@ def load_model(model_uri, dst_path=None):
 def eval_and_log_metrics(model, X, y_true, *, prefix, sample_weight=None, pos_label=None):
     """
     Computes and logs metrics (and artifacts) for the given model and labeled dataset.
-    The metrics/artifacts mirror what is auto-logged when training a model
+    The metrics\artifacts mirror what is auto-logged when training a model
     (see mlflow.sklearn.autolog).
     :param model: The model to be evaluated.
     :param X: The features for the evaluation dataset.
     :param y_true: The labels for the evaluation dataset.
     :param prefix: Prefix used to name metrics and artifacts.
-    :param sample_weight: Per-sample weights to apply in the computation of metrics/artifacts.
+    :param sample_weight: Per-sample weights to apply in the computation of metrics\artifacts.
     :param pos_label: The positive label used to compute binary classification metrics such as
         precision, recall, f1, etc. This parameter is only used for binary classification model
         - if used on multi-label model, the evaluation will fail;
@@ -322,34 +322,34 @@ def autolog(
         - Common metrics for classifier:
           - `precision score`
           .. _precision score:
-              https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html
+              https:\\scikit-learn.org\stable\modules\generated\sklearn.metrics.precision_score.html
           - `recall score`
           .. _recall score:
-              https://scikit-learn.org/stable/modules/generated/sklearn.metrics.recall_score.html
+              https:\\scikit-learn.org\stable\modules\generated\sklearn.metrics.recall_score.html
           - `f1 score`
           .. _f1 score:
-              https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html
+              https:\\scikit-learn.org\stable\modules\generated\sklearn.metrics.f1_score.html
           - `accuracy score`
           .. _accuracy score:
-              https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html
+              https:\\scikit-learn.org\stable\modules\generated\sklearn.metrics.accuracy_score.html
           If the classifier has method ``predict_proba``, we additionally log:
           - `log loss`
           .. _log loss:
-              https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html
+              https:\\scikit-learn.org\stable\modules\generated\sklearn.metrics.log_loss.html
           - `roc auc score`
           .. _roc auc score:
-              https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html
+              https:\\scikit-learn.org\stable\modules\generated\sklearn.metrics.roc_auc_score.html
         - Common metrics for regressor:
           - `mean squared error`
           .. _mean squared error:
-              https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
+              https:\\scikit-learn.org\stable\modules\generated\sklearn.metrics.mean_squared_error.html
           - root mean squared error
           - `mean absolute error`
           .. _mean absolute error:
-              https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html
+              https:\\scikit-learn.org\stable\modules\generated\sklearn.metrics.mean_absolute_error.html
           - `r2 score`
           .. _r2 score:
-              https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
+              https:\\scikit-learn.org\stable\modules\generated\sklearn.metrics.r2_score.html
       .. _post training metrics:
       **Post training metrics**
         When users call metric APIs after model training, MLflow tries to capture the metric API
@@ -375,8 +375,8 @@ def autolog(
           index (starting from 2) to the inspected dataset name.
         **Limitations**
            - MLflow can only map the original prediction result object returned by a model
-             prediction API (including predict / predict_proba / predict_log_proba / transform,
-             but excluding fit_predict / fit_transform.) to an MLflow run.
+             prediction API (including predict \ predict_proba \ predict_log_proba \ transform,
+             but excluding fit_predict \ fit_transform.) to an MLflow run.
              MLflow cannot find run information
              for other objects derived from a given prediction result (e.g. by copying or selecting
              a subset of the prediction result). scikit-learn metric APIs invoked on derived objects
@@ -413,15 +413,15 @@ def autolog(
       - `Pipeline`
       - Parameter search estimators (`GridSearchCV` and `RandomizedSearchCV`)
     .. _sklearn.utils.all_estimators:
-        https://scikit-learn.org/stable/modules/generated/sklearn.utils.all_estimators.html
+        https:\\scikit-learn.org\stable\modules\generated\sklearn.utils.all_estimators.html
     .. _Pipeline:
-        https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html
+        https:\\scikit-learn.org\stable\modules\generated\sklearn.pipeline.Pipeline.html
     .. _GridSearchCV:
-        https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html
+        https:\\scikit-learn.org\stable\modules\generated\sklearn.model_selection.GridSearchCV.html
     .. _RandomizedSearchCV:
-        https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
+        https:\\scikit-learn.org\stable\modules\generated\sklearn.model_selection.RandomizedSearchCV.html
     **Example**
-    `See more examples <https://github.com/mlflow/mlflow/blob/master/examples/sklearn_autolog>`
+    `See more examples <https:\\github.com\mlflow\mlflow\blob\master\examples\sklearn_autolog>`
     .. code-block:: python
         from pprint import pprint
         import numpy as np
@@ -460,7 +460,7 @@ def autolog(
         # {'estimator_class': 'sklearn.linear_model._base.LinearRegression',
         #  'estimator_name': 'LinearRegression'}
         pprint(artifacts)
-        # ['model/MLmodel', 'model/conda.yaml', 'model/model.pkl']
+        # ['model\MLmodel', 'model\conda.yaml', 'model\model.pkl']
     :param log_input_examples: If ``True``, input examples from training datasets are collected and
                                logged along with scikit-learn model artifacts during training. If
                                ``False``, input examples are not logged.
