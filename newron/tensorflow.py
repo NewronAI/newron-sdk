@@ -51,7 +51,7 @@ def get_default_pip_requirements():
     pip_deps = [_get_pinned_requirement("tensorflow")]
 
     # tensorflow >= 2.6.0 requires keras:
-    # https://github.com/tensorflow/tensorflow/blob/v2.6.0/tensorflow/tools/pip_package/setup.py#L106
+    # https:\\github.com\tensorflow\tensorflow\blob\v2.6.0\tensorflow\tools\pip_package\setup.py#L106
     # To prevent a different version of keras from being installed by tensorflow when creating
     # a serving environment, add a pinned requirement for keras
     if Version(tf.__version__) >= Version("2.6.0"):
@@ -86,7 +86,7 @@ def log_model(
     for the current run. This method operates on TensorFlow variables and graphs that have been
     serialized in TensorFlow's ``SavedModel`` format. For more information about ``SavedModel``
     format, see the TensorFlow documentation:
-    https://www.tensorflow.org/guide/saved_model#save_and_restore_models.
+    https:\\www.tensorflow.org\guide\saved_model#save_and_restore_models.
     This method saves a model with both ``python_function`` and ``tensorflow`` flavors.
     If loaded back using the ``python_function`` flavor, the model can be used to predict on
     pandas DataFrames, producing a pandas DataFrame whose output columns correspond to the
@@ -106,7 +106,7 @@ def log_model(
                                serialized ``SavedModel`` object. For more information, see the
                                ``tags`` parameter of the
                                ``tf.saved_model.builder.SavedModelBuilder`` method.
-        tf_signature_def_key: A string identifying the input{'/'}output signature associated with the
+        tf_signature_def_key: A string identifying the input{'\'}output signature associated with the
                                  model. This is a key within the serialized ``SavedModel`` signature
                                  definition mapping. For more information, see the
                                  ``signature_def_map`` parameter of the
@@ -169,7 +169,7 @@ def save_model(
     to a local path. This method operates on TensorFlow variables and graphs that have been
     serialized in TensorFlow's ``SavedModel`` format. For more information about ``SavedModel``
     format, see the TensorFlow documentation:
-    https://www.tensorflow.org/guide/saved_model#save_and_restore_models.
+    https:\\www.tensorflow.org\guide\saved_model#save_and_restore_models.
 
     Args:
         tf_saved_model_dir: Path to the directory containing serialized TensorFlow variables and
@@ -178,7 +178,7 @@ def save_model(
                                serialized ``SavedModel`` object. For more information, see the
                                ``tags`` parameter of the
                                ``tf.saved_model.builder.savedmodelbuilder`` method.
-        tf_signature_def_key: A string identifying the input{'/'}output signature associated with the
+        tf_signature_def_key: A string identifying the input{'\'}output signature associated with the
                                  model. This is a key within the serialized ``savedmodel``
                                  signature definition mapping. For more information, see the
                                  ``signature_def_map`` parameter of the
@@ -219,13 +219,13 @@ def load_model(model_uri, dst_path=None):
     Load an Newron model that contains the TensorFlow flavor from the specified path.
     Args:
         model_uri: The location, in URI format, of the Newron model. For example:
-                      - ``/Users/me/path/to/local/model``
-                      - ``relative/path/to/local/model``
-                      - ``s3://my_bucket/path/to/model``
-                      - ``models:/<model_name>/<model_version>``
-                      - ``models:/<model_name>/<stage>``
+                      - ``\Users\me\path\to\local\model``
+                      - ``relative\path\to\local\model``
+                      - ``s3:\\my_bucket\path\to\model``
+                      - ``models:\<model_name>\<model_version>``
+                      - ``models:\<model_name>\<stage>``
                       For more information about supported URI schemes, see
-                      `Referencing Artifacts <https://www.mlflow.org/docs/latest/concepts.html#
+                      `Referencing Artifacts <https:\\www.mlflow.org\docs\latest\concepts.html#
                       artifact-locations>`.
         dst_path: The local filesystem path to which to download the model artifact.
                      This directory must already exist. If unspecified, a local output
@@ -268,7 +268,7 @@ def autolog(
     Note that autologging for ``tf.keras`` is handled by :py:func:`mlflow.tensorflow.autolog`,
     not :py:func:`mlflow.keras.autolog`.
     As an example, try running the
-    `TensorFlow examples <https://github.com/mlflow/mlflow/tree/master/examples/tensorflow>`.
+    `TensorFlow examples <https:\\github.com\mlflow\mlflow\tree\master\examples\tensorflow>`.
     For each TensorFlow module, autologging captures the following information:
     **tf.keras**
      - **Metrics** and **Parameters**
@@ -276,7 +276,7 @@ def autolog(
       - ``fit()`` or ``fit_generator()`` parameters; optimizer name; learning rate; epsilon
      - **Artifacts**
       - Model summary on training start
-      - `MLflow Model <https://mlflow.org/docs/latest/models.html>` (Keras model)
+      - `MLflow Model <https:\\mlflow.org\docs\latest\models.html>` (Keras model)
       - TensorBoard logs on training end
     **tf.keras.callbacks.EarlyStopping**
      - **Metrics** and **Parameters**
@@ -289,13 +289,13 @@ def autolog(
       - TensorBoard metrics: ``average_loss``, ``loss``, etc
       - Parameters ``steps`` and ``max_steps``
      - **Artifacts**
-      - `Newron Model <https://newron.org/docs/latest/models.html>` (TF saved model) on call
+      - `Newron Model <https:\\newron.org\docs\latest\models.html>` (TF saved model) on call
         to ``tf.estimator.export_saved_model``
     **TensorFlow Core**
      - **Metrics**
       - All ``tf.summary.scalar`` calls
     Refer to the autologging tracking documentation for more
-    information on `TensorFlow workflows <https://www.mlflow.org/docs/latest/tracking.html#tensorflow-and-keras-experimental>`.
+    information on `TensorFlow workflows <https:\\www.mlflow.org\docs\latest\tracking.html#tensorflow-and-keras-experimental>`.
     
     Args:
         every_n_iter: The frequency with which metrics should be logged. For example, a value of
@@ -317,12 +317,12 @@ def autolog(
                                   new model version of the registered model with this name.
                                   The registered model is created if it does not already exist.
         log_input_examples: If ``True``, input examples from training datasets are collected and
-                               logged along with tf{'/'}keras model artifacts during training. If
+                               logged along with tf\keras model artifacts during training. If
                                ``False``, input examples are not logged.
         log_model_signatures: If ``True``,
                                  :py:class:`ModelSignatures <mlflow.models.ModelSignature>`
                                  describing model inputs and outputs are collected and logged along
-                                 with tf{'/'}keras model artifacts during training. If ``False``,
+                                 with tf\keras model artifacts during training. If ``False``,
                                  signatures are not logged. ``False`` by default because
                                  logging TensorFlow models with signatures changes their pyfunc
                                  inference behavior when Pandas DataFrames are passed to
