@@ -25,11 +25,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Copy
+      - name: DOcs Gen, Copy and Push
         uses: ./.github/actions/copycat
         with:
           personal_token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          src_path: /docs/sources/api
+          src_path: docs/sources/api
           dst_path: /docs/pages/
           src_branch: main
           dst_branch: main
