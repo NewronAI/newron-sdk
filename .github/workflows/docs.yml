@@ -32,7 +32,7 @@ jobs:
       - name: Generate Docs
         run: gendocs --config mkgendocs.yml
       - name: Copy
-        uses: andstor/copycat-action@v3
+        uses: ./.github/actions/copycat
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
           src_path: /docs/sources/api
