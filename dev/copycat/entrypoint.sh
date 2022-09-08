@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # @author André Storhaug <andr3.storhaug@gmail.com>
-# @date 2021-05-01
+# @date 2021-05-01https://github.com/NewronAI/NewronSDK/blob/main/dev/copycat/entrypoint.sh
 # @license MIT
 # @version 3.2.4
 
@@ -88,6 +88,10 @@ if [ "$?" -ne 0 ]; then
     echo >&2 "Cloning '$SRC_REPO' failed"
     exit 1
 fi
+cd ${SRC_REPO_NAME}
+pip install mkgendocs
+gendocs --config mkgendocs.yml
+cd ..
 rm -rf ${SRC_REPO_NAME}/.git
 
 if [[ -n "$FILE_FILTER" ]]; then
