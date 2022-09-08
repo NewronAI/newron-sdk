@@ -219,7 +219,7 @@ def load_model(model_uri, dst_path=None):
     Load an Newron model that contains the TensorFlow flavor from the specified path.
     Args:
         model_uri: The location, in URI format, of the Newron model. For example:
-                      - ``\Users\me\path\to\local\model``
+                      - ``Users\me\path\to\local\model``
                       - ``relative\path\to\local\model``
                       - ``s3:\\my_bucket\path\to\model``
                       - ``models:\<model_name>\<model_version>``
@@ -244,7 +244,7 @@ def load_model(model_uri, dst_path=None):
             input_tensors = [tf_graph.get_tensor_by_name(input_signature.name)
                                 for _, input_signature in signature_definition.inputs.items()]
             output_tensors = [tf_graph.get_tensor_by_name(output_signature.name)
-                                for _, output_signature in signature_definition.outputs.items()]
+                                for _, output_signature in signature_definition.outputs.items()]   
     """
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
