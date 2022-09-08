@@ -135,8 +135,8 @@ if [ "$?" -ne 0 ]; then
     fi
     cd ..
 fi
-cd ${DST_REPO_DIR}
-rm -rf docs
+cd ${DST_REPO_DIR}/pages
+rm -rf api
 cd ..
 
 if [ "$CLEAN" = "true" ]; then
