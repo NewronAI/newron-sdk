@@ -59,7 +59,19 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     def request_headers(self):
         return {"project_id": Experiment.experiment_id}
 
-def init(experiment_name, description=None):
+def init(experiment_name, project_name, description=None):
+    """
+    Function to initialise a tracking experiment with Newron 
+
+    Args:
+        experiment_name: Case sensitive name of the experiment to be activated. If an experiment
+                            with this name does not exist, a new experiment wth this name is
+                            created.
+        project_name: Case sensitive name of the project under which the experimentis
+                            to be activated.
+        description: Description of the experiment being activated. In case the experiment had a 
+                            description previously it would be overwritten by the new description.
+    """
     _auth = Auth0()
     auth_response = _auth.authenticate()
     if auth_response:
