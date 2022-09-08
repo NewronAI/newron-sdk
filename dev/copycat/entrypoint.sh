@@ -92,6 +92,7 @@ cd ${SRC_REPO_NAME}
 pip install mkgendocs
 gendocs --config mkgendocs.yml
 cd ..
+cd ..
 rm -rf ${SRC_REPO_NAME}/.git
 
 if [[ -n "$FILE_FILTER" ]]; then
