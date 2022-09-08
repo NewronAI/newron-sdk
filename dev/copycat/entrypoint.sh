@@ -139,6 +139,7 @@ cd ${DST_REPO_DIR}/docs/pages
 rm -rf api
 cd ..
 cd ..
+cd ..
 
 if [ "$CLEAN" = "true" ]; then
     if [ -f "${DST_REPO_DIR}/${DST_PATH}" ] ; then
