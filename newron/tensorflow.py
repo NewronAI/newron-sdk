@@ -106,7 +106,7 @@ def log_model(
                                serialized ``SavedModel`` object. For more information, see the
                                ``tags`` parameter of the
                                ``tf.saved_model.builder.SavedModelBuilder`` method.
-        tf_signature_def_key: A string identifying the input/output signature associated with the
+        tf_signature_def_key: A string identifying the input{'/'}output signature associated with the
                                  model. This is a key within the serialized ``SavedModel`` signature
                                  definition mapping. For more information, see the
                                  ``signature_def_map`` parameter of the
@@ -178,7 +178,7 @@ def save_model(
                                serialized ``SavedModel`` object. For more information, see the
                                ``tags`` parameter of the
                                ``tf.saved_model.builder.savedmodelbuilder`` method.
-        tf_signature_def_key: A string identifying the input/output signature associated with the
+        tf_signature_def_key: A string identifying the input{'/'}output signature associated with the
                                  model. This is a key within the serialized ``savedmodel``
                                  signature definition mapping. For more information, see the
                                  ``signature_def_map`` parameter of the
@@ -318,12 +318,12 @@ def autolog(
                                   new model version of the registered model with this name.
                                   The registered model is created if it does not already exist.
         log_input_examples: If ``True``, input examples from training datasets are collected and
-                               logged along with tf/keras model artifacts during training. If
+                               logged along with tf{'/'}keras model artifacts during training. If
                                ``False``, input examples are not logged.
         log_model_signatures: If ``True``,
                                  :py:class:`ModelSignatures <mlflow.models.ModelSignature>`
                                  describing model inputs and outputs are collected and logged along
-                                 with tf/keras model artifacts during training. If ``False``,
+                                 with tf{'/'}keras model artifacts during training. If ``False``,
                                  signatures are not logged. ``False`` by default because
                                  logging TensorFlow models with signatures changes their pyfunc
                                  inference behavior when Pandas DataFrames are passed to
