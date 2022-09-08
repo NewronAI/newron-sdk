@@ -226,7 +226,7 @@ def load_model(model_uri, dst_path=None):
                       - ``models:/<model_name>/<stage>``
                       For more information about supported URI schemes, see
                       `Referencing Artifacts <https://www.mlflow.org/docs/latest/concepts.html#
-                      artifact-locations>`_.
+                      artifact-locations>`.
         dst_path: The local filesystem path to which to download the model artifact.
                      This directory must already exist. If unspecified, a local output
                      path will be created.
@@ -268,7 +268,7 @@ def autolog(
     Note that autologging for ``tf.keras`` is handled by :py:func:`mlflow.tensorflow.autolog`,
     not :py:func:`mlflow.keras.autolog`.
     As an example, try running the
-    `TensorFlow examples <https://github.com/mlflow/mlflow/tree/master/examples/tensorflow>`_.
+    `TensorFlow examples <https://github.com/mlflow/mlflow/tree/master/examples/tensorflow>`.
     For each TensorFlow module, autologging captures the following information:
     **tf.keras**
      - **Metrics** and **Parameters**
@@ -276,7 +276,7 @@ def autolog(
       - ``fit()`` or ``fit_generator()`` parameters; optimizer name; learning rate; epsilon
      - **Artifacts**
       - Model summary on training start
-      - `MLflow Model <https://mlflow.org/docs/latest/models.html>`_ (Keras model)
+      - `MLflow Model <https://mlflow.org/docs/latest/models.html>` (Keras model)
       - TensorBoard logs on training end
     **tf.keras.callbacks.EarlyStopping**
      - **Metrics** and **Parameters**
@@ -289,14 +289,14 @@ def autolog(
       - TensorBoard metrics: ``average_loss``, ``loss``, etc
       - Parameters ``steps`` and ``max_steps``
      - **Artifacts**
-      - `Newron Model <https://newron.org/docs/latest/models.html>`_ (TF saved model) on call
+      - `Newron Model <https://newron.org/docs/latest/models.html>` (TF saved model) on call
         to ``tf.estimator.export_saved_model``
     **TensorFlow Core**
      - **Metrics**
       - All ``tf.summary.scalar`` calls
     Refer to the autologging tracking documentation for more
     information on `TensorFlow workflows
-    <https://www.mlflow.org/docs/latest/tracking.html#tensorflow-and-keras-experimental>`_.
+    <https://www.mlflow.org/docs/latest/tracking.html#tensorflow-and-keras-experimental>`.
     
     Args:
         every_n_iter: The frequency with which metrics should be logged. For example, a value of

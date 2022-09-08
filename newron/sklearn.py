@@ -224,7 +224,7 @@ def load_model(model_uri, dst_path=None):
                       - ``models:/<model_name>/<stage>``
                       For more information about supported URI schemes, see
                       `Referencing Artifacts <https://www.mlflow.org/docs/latest/concepts.html#
-                      artifact-locations>`_.
+                      artifact-locations>`.
     :param dst_path: The local filesystem path to which to download the model artifact.
                      This directory must already exist. If unspecified, a local output
                      path will be created.
@@ -320,34 +320,34 @@ def autolog(
         - A training score obtained by ``estimator.score``. Note that the training score is
           computed using parameters given to ``fit()``.
         - Common metrics for classifier:
-          - `precision score`_
+          - `precision score`
           .. _precision score:
               https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html
-          - `recall score`_
+          - `recall score`
           .. _recall score:
               https://scikit-learn.org/stable/modules/generated/sklearn.metrics.recall_score.html
-          - `f1 score`_
+          - `f1 score`
           .. _f1 score:
               https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html
-          - `accuracy score`_
+          - `accuracy score`
           .. _accuracy score:
               https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html
           If the classifier has method ``predict_proba``, we additionally log:
-          - `log loss`_
+          - `log loss`
           .. _log loss:
               https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html
-          - `roc auc score`_
+          - `roc auc score`
           .. _roc auc score:
               https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html
         - Common metrics for regressor:
-          - `mean squared error`_
+          - `mean squared error`
           .. _mean squared error:
               https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
           - root mean squared error
-          - `mean absolute error`_
+          - `mean absolute error`
           .. _mean absolute error:
               https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html
-          - `r2 score`_
+          - `r2 score`
           .. _r2 score:
               https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
       .. _post training metrics:
@@ -400,18 +400,18 @@ def autolog(
             corresponding metric call commands that produced the metrics, e.g.
             ``accuracy_score(y_true=test_iris_y, y_pred=pred_iris_y, normalize=False)``.
     **How does autologging work for meta estimators?**
-      When a meta estimator (e.g. `Pipeline`_, `GridSearchCV`_) calls ``fit()``, it internally calls
+      When a meta estimator (e.g. `Pipeline`, `GridSearchCV`) calls ``fit()``, it internally calls
       ``fit()`` on its child estimators. Autologging does NOT perform logging on these constituent
       ``fit()`` calls.
       **Parameter search**
           In addition to recording the information discussed above, autologging for parameter
-          search meta estimators (`GridSearchCV`_ and `RandomizedSearchCV`_) records child runs
+          search meta estimators (`GridSearchCV` and `RandomizedSearchCV`) records child runs
           with metrics for each set of explored parameters, as well as artifacts and parameters
           for the best model (if available).
     **Supported estimators**
-      - All estimators obtained by `sklearn.utils.all_estimators`_ (including meta estimators).
-      - `Pipeline`_
-      - Parameter search estimators (`GridSearchCV`_ and `RandomizedSearchCV`_)
+      - All estimators obtained by `sklearn.utils.all_estimators` (including meta estimators).
+      - `Pipeline`
+      - Parameter search estimators (`GridSearchCV` and `RandomizedSearchCV`)
     .. _sklearn.utils.all_estimators:
         https://scikit-learn.org/stable/modules/generated/sklearn.utils.all_estimators.html
     .. _Pipeline:
@@ -421,7 +421,7 @@ def autolog(
     .. _RandomizedSearchCV:
         https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
     **Example**
-    `See more examples <https://github.com/mlflow/mlflow/blob/master/examples/sklearn_autolog>`_
+    `See more examples <https://github.com/mlflow/mlflow/blob/master/examples/sklearn_autolog>`
     .. code-block:: python
         from pprint import pprint
         import numpy as np
@@ -499,7 +499,7 @@ def autolog(
                             results. To change metric used for selecting best k results, change
                             ordering of dict passed as `scoring` parameter for estimator.
     :param log_post_training_metrics: If ``True``, post training metrics are logged. Defaults to
-                                      ``True``. See the `post training metrics`_ section for more
+                                      ``True``. See the `post training metrics` section for more
                                       details.
     :param serialization_format: The format in which to serialize the model. This should be one of
                                  the following: ``mlflow.sklearn.SERIALIZATION_FORMAT_PICKLE`` or
