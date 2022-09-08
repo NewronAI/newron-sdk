@@ -83,7 +83,7 @@ else
     echo "Copying files matching \"${FILE_FILTER}\" from \"${SRC_REPO_NAME}/${SRC_PATH}\" and pushing it to ${DST_OWNER}/${DST_REPO_NAME}"
 fi
 
-git clone --branch ${SRC_BRANCH} --single-branch --depth 1 https://${PERSONAL_TOKEN}@github.com/${SRC_REPO}.git
+git clone --branch ${SRC_BRANCH} --single-branch --depth 1 https://token:${PERSONAL_TOKEN}@github.com/${SRC_REPO}.git
 if [ "$?" -ne 0 ]; then
     echo >&2 "Cloning '$SRC_REPO' failed"
     exit 1
@@ -115,11 +115,11 @@ if [[ -n "$FILTER" ]]; then
 fi
 
 
-git clone --branch ${DST_BRANCH} --single-branch --depth 1 https://${PERSONAL_TOKEN}@github.com/${DST_REPO}.git ${DST_REPO_DIR}
+git clone --branch ${DST_BRANCH} --single-branch --depth 1 https://token:${PERSONAL_TOKEN}@github.com/${DST_REPO}.git ${DST_REPO_DIR}
 if [ "$?" -ne 0 ]; then
     echo >&2 "Cloning branch '$DST_BRANCH' in '$DST_REPO' failed"
     echo >&2 "Falling back to default branch"
-    git clone --single-branch --depth 1 https://${PERSONAL_TOKEN}@github.com/${DST_REPO}.git ${DST_REPO_DIR}
+    git clone --single-branch --depth 1 https://token:${PERSONAL_TOKEN}@github.com/${DST_REPO}.git ${DST_REPO_DIR}
     cd ${DST_REPO_DIR} || exit "$?"
     echo >&2 "Creating branch '$DST_BRANCH'"
     git checkout -b ${DST_BRANCH}
