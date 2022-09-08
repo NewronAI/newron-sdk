@@ -60,7 +60,7 @@ inputs:
     required: false
 runs:
   using: 'docker'
-  image: '...../dev/copycat/Dockerfile'
+  image: '../../../dev/copycat/Dockerfile'
   args:
     - ${{ inputs.personal_token }}
     - ${{ inputs.src_path }}
