@@ -92,7 +92,6 @@ cd ${SRC_REPO_NAME}
 pip install mkgendocs
 gendocs --config mkgendocs.yml
 cd ..
-cd ..
 rm -rf ${SRC_REPO_NAME}/.git
 
 if [[ -n "$FILE_FILTER" ]]; then
@@ -138,6 +137,7 @@ if [ "$?" -ne 0 ]; then
 fi
 cd ${DST_REPO_DIR}/pages
 rm -rf api
+cd ..
 cd ..
 
 if [ "$CLEAN" = "true" ]; then
