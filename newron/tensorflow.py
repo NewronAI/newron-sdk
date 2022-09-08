@@ -295,8 +295,7 @@ def autolog(
      - **Metrics**
       - All ``tf.summary.scalar`` calls
     Refer to the autologging tracking documentation for more
-    information on `TensorFlow workflows
-    <https://www.mlflow.org/docs/latest/tracking.html#tensorflow-and-keras-experimental>`.
+    information on `TensorFlow workflows <https://www.mlflow.org/docs/latest/tracking.html#tensorflow-and-keras-experimental>`.
     
     Args:
         every_n_iter: The frequency with which metrics should be logged. For example, a value of
