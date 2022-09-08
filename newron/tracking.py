@@ -61,7 +61,9 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
 
 def init(experiment_name, project_name, description=None):
     """
-    Function to initialise a tracking experiment with Newron 
+    Function to initialise a tracking experiment with Newron. The function authenticates
+    the user against the Newron server and allows the user to activate an experiment under 
+    a project. 
 
     Args:
         experiment_name: Case sensitive name of the experiment to be activated. If an experiment

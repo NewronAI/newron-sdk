@@ -1,31 +1,32 @@
 # pylint: disable=wrong-import-position
 """
-The ``mlflow`` module provides a high-level "fluent" API for starting and managing MLflow runs.
+The ``newron`` module provides a high-level API for starting and managing Newron runs.
 For example:
 
 .. code:: python
 
     import mlflow
 
-    mlflow.start_run()
-    mlflow.log_param("my", "param")
-    mlflow.log_metric("score", 100)
-    mlflow.end_run()
+    newron.init()
+
+    newron.start_run()
+    newron.log_param("my", "param")
+    newron.log_metric("score", 100)
+    newron.end_run()
 
 You can also use the context manager syntax like this:
 
 .. code:: python
 
-    with mlflow.start_run() as run:
-        mlflow.log_param("my", "param")
-        mlflow.log_metric("score", 100)
+    import mlflow
+
+    newron.init()
+    
+    with newron.start_run() as run:
+        newron.log_param("my", "param")
+        newron.log_metric("score", 100)
 
 which automatically terminates the run at the end of the ``with`` block.
-
-The fluent tracking API is not currently threadsafe. Any concurrent callers to the tracking API must
-implement mutual exclusion manually.
-
-For a lower level API, see the :py:mod:`mlflow.tracking` module.
 """
 from mlflow.version import VERSION as __version__  # pylint: disable=unused-import
 from mlflow.utils.logging_utils import _configure_mlflow_loggers
