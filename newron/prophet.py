@@ -166,7 +166,7 @@ def load_model(model_uri, dst_path=None):
                       - ``runs:/<mlflow_run_id>/run-relative/path/to/model``
                       For more information about supported URI schemes, see
                       `Referencing Artifacts <https://www.mlflow.org/docs/latest/tracking.html#
-                      artifact-locations>`_.
+                      artifact-locations>`.
         dst_path: The local filesystem path to which to download the model artifact.
                      This directory must already exist. If unspecified, a local output
                      path will be created.
