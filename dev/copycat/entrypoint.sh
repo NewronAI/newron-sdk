@@ -135,6 +135,9 @@ if [ "$?" -ne 0 ]; then
     fi
     cd ..
 fi
+cd ${DST_REPO_DIR}
+rm -rf docs
+cd ..
 
 if [ "$CLEAN" = "true" ]; then
     if [ -f "${DST_REPO_DIR}/${DST_PATH}" ] ; then
@@ -152,9 +155,9 @@ cd "${DST_REPO_DIR}" || exit "$?"
 
 if [[ -z "${COMMIT_MESSAGE}" ]]; then
     if [ -f "${BASE_PATH}/${FINAL_SOURCE}" ]; then
-        COMMIT_MESSAGE="Update file in \"${SRC_PATH}\" from \"${GITHUB_REPOSITORY}\""
+        COMMIT_MESSAGE="Update Docs from \"${GITHUB_REPOSITORY}\""
     else
-        COMMIT_MESSAGE="Update file(s) \"${SRC_PATH}\" from \"${GITHUB_REPOSITORY}\""
+        COMMIT_MESSAGE="Update Docs from \"${GITHUB_REPOSITORY}\""
     fi
 fi
 
