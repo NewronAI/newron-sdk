@@ -86,7 +86,7 @@ def log_model(
     for the current run. This method operates on TensorFlow variables and graphs that have been
     serialized in TensorFlow's ``SavedModel`` format. For more information about ``SavedModel``
     format, see the TensorFlow documentation:
-    https://www.tensorflow.org/guide/saved_model#save_and_restore_models.
+    [Tensorflow: Save and Restore Models](https://www.tensorflow.org/guide/saved_model#save_and_restore_models.)
     This method saves a model with both ``python_function`` and ``tensorflow`` flavors.
     If loaded back using the ``python_function`` flavor, the model can be used to predict on
     pandas DataFrames, producing a pandas DataFrame whose output columns correspond to the
@@ -169,9 +169,9 @@ def save_model(
     to a local path. This method operates on TensorFlow variables and graphs that have been
     serialized in TensorFlow's ``SavedModel`` format. For more information about ``SavedModel``
     format, see the TensorFlow documentation:
-    https://www.tensorflow.org/guide/saved_model#save_and_restore_models.
+    [Tensorflow: Save and Restore Models](https://www.tensorflow.org/guide/saved_model#save_and_restore_models.)
 
-    Args:
+    Args:[source][source][source]
         tf_saved_model_dir: Path to the directory containing serialized TensorFlow variables and
                                graphs in ``SavedModel`` format.
         tf_meta_graph_tags: A list of tags identifying the model's metagraph within the
@@ -217,23 +217,7 @@ def save_model(
 def load_model(model_uri, dst_path=None):
     """
     Load an Newron model that contains the TensorFlow flavor from the specified path.
-    Args:
-        model_uri: The location, in URI format, of the Newron model. For example:
-            * ``Users/me/path/to/local/model``
-            * ``relative/path/to/local/model``
-            * ``s3://my_bucket/path/to/model``
-            * ``models:/<model_name>/<model_version>``
-            * ``models:/<model_name>/<stage>``
-            For more information about supported URI schemes, see
-            `Referencing Artifacts <https://www.mlflow.org/docs/latest/concepts.html#
-            artifact-locations>`.
-        dst_path: The local filesystem path to which to download the model artifact.
-                     This directory must already exist. If unspecified, a local output
-                     path will be created.
-    Returns: 
-            A callable graph (tf.function) that takes inputs and returns inferences.
-    .. code-block:: python
-        :caption: Example
+    ```python
         import newron.tensorflow
         import tensorflow as tf
         tf_graph = tf.Graph()
@@ -244,7 +228,23 @@ def load_model(model_uri, dst_path=None):
             input_tensors = [tf_graph.get_tensor_by_name(input_signature.name)
                                 for _, input_signature in signature_definition.inputs.items()]
             output_tensors = [tf_graph.get_tensor_by_name(output_signature.name)
-                                for _, output_signature in signature_definition.outputs.items()]   
+                                for _, output_signature in signature_definition.outputs.items()]
+    ```
+    Args:
+        model_uri: The location, in URI format, of the Newron model. For example:
+            * ``Users/me/path/to/local/model``
+            * ``relative/path/to/local/model``
+            * ``s3://my_bucket/path/to/model``
+            * ``models:/<model_name>/<model_version>``
+            * ``models:/<model_name>/<stage>``
+                    For more information about supported URI schemes, see
+                    `Referencing Artifacts <https://www.mlflow.org/docs/latest/concepts.html#
+                    artifact-locations>`.
+        dst_path: The local filesystem path to which to download the model artifact.
+                     This directory must already exist. If unspecified, a local output
+                     path will be created.
+    Returns: 
+        A callable graph (tf.function) that takes inputs and returns inferences.   
     """
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
@@ -280,8 +280,7 @@ def autolog(
       - TensorBoard logs on training end
     **tf.keras.callbacks.EarlyStopping**
      - **Metrics** and **Parameters**
-      - Metrics from the ``EarlyStopping`` callbacks: ``stopped_epoch``, ``restored_epoch``,
-        ``restore_best_weight``, etc
+      - Metrics from the ``EarlyStopping`` callbacks: ``stopped_epoch``, ``restored_epoch``,``restore_best_weight``, etc
       - ``fit()`` or ``fit_generator()`` parameters associated with ``EarlyStopping``:
         ``min_delta``, ``patience``, ``baseline``, ``restore_best_weights``, etc
     **tf.estimator**
