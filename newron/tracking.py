@@ -82,7 +82,10 @@ def init(experiment_name, project_name, description=None):
         url = "https://grpc-api-gateway-d8q71ttn.uc.gateway.dev/v1/set/project"
 
         payload = {}
-        payload["name"] = experiment_name
+        payload["accountId"] = auth_response["email"]
+        payload["userId"] = auth_response["sub"].split("|")[1]
+        payload["projectName"] = project_name
+        payload["experimentName"] = experiment_name
         if description:
             payload["desc"] = description
 
@@ -92,8 +95,6 @@ def init(experiment_name, project_name, description=None):
         }
         print(auth_response)
         gateway_response = requests.request("POST", PROJECT_URI, json=payload, headers=headers).json()
-        #set_experiment(int(gateway_response["mlflow"]["experimentId"]))
         set_experiment(experiment_id = gateway_response["mlflow"]["experimentId"])
-        newron.autolog()
     else:
         raise Exception("Authentication failed")
