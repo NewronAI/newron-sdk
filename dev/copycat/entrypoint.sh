@@ -137,6 +137,7 @@ if [ "$?" -ne 0 ]; then
 fi
 cd ${DST_REPO_DIR}/docs/pages
 rm -rf api
+rm -rf functions
 cd ..
 cd ..
 cd ..

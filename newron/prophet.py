@@ -68,7 +68,7 @@ def save_model(
         pr_model: Prophet model (an instance of Prophet() forecaster that has been fit
                      on a temporal series.
         path: Local path where the serialized model (as JSON) is to be saved.
-        conda_env: {{ conda_env }}
+        conda_env: conda_env
         code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
@@ -90,8 +90,8 @@ def save_model(
                           model. The given example will be converted to a Pandas DataFrame and then
                           serialized to json using the Pandas split-oriented format. Bytes are
                           base64-encoded.
-        pip_requirements: {{ pip_requirements }}
-        extra_pip_requirements: {{ extra_pip_requirements }}
+        pip_requirements: pip_requirements
+        extra_pip_requirements: extra_pip_requirements
     """
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
@@ -114,7 +114,7 @@ def log_model(
     Log a Prophet model as an MLflow artifact for the current run.
         pr_model: Prophet model to be saved.
         artifact_path: Run-relative artifact path.
-        conda_env: {{ conda_env }}
+        conda_env: conda_env
         code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
@@ -145,8 +145,8 @@ def log_model(
                         to finish being created and is in ``READY`` status.
                         By default, the function waits for five minutes.
                         Specify 0 or None to skip waiting.
-        pip_requirements: {{ pip_requirements }}
-        extra_pip_requirements: {{ extra_pip_requirements }}
+        pip_requirements: pip_requirements
+        extra_pip_requirements: extra_pip_requirements
     Returns:
         A :py:class:`ModelInfo <mlflow.models.model.ModelInfo>` instance that contains the
              metadata of the logged model.

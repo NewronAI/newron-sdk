@@ -4,8 +4,14 @@ repo: https://github.com/NewronAI/NewronSDK  #link to sources on github
 version: main                               #link to sources on github
 
 pages:
-  - page: "api/prophet.mdx"
+  - page: "functions/prophet.mdx"
     source: "newron/prophet.py"
+    functions:
+      - load_model
+      - save_model
+      - log_model
+  - page: "functions/spacy.mdx"
+    source: "newron/spacy.py"
     functions:
       - load_model
       - save_model

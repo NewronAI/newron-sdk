@@ -64,7 +64,7 @@ def save_model(
     Args:
         spacy_model: spaCy model to be saved.
         path: Local path where the model is to be saved.
-        conda_env: {{ conda_env }}
+        conda_env: conda_env
         code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
@@ -85,8 +85,8 @@ def save_model(
                           model. The given example will be converted to a Pandas DataFrame and then
                           serialized to json using the Pandas split-oriented format. Bytes are
                           base64-encoded.
-        pip_requirements: {{ pip_requirements }}
-        extra_pip_requirements: {{ extra_pip_requirements }}
+        pip_requirements: pip_requirements
+        extra_pip_requirements: extra_pip_requirements
     """
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
@@ -111,7 +111,7 @@ def log_model(
     Args:
         spacy_model: spaCy model to be saved.
         artifact_path: Run-relative artifact path.
-        conda_env: {{ conda_env }}
+        conda_env: conda_env
         code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
@@ -134,8 +134,8 @@ def log_model(
                           model. The given example will be converted to a Pandas DataFrame and then
                           serialized to json using the Pandas split-oriented format. Bytes are
                           base64-encoded.
-        pip_requirements: {{ pip_requirements }}
-        extra_pip_requirements: {{ extra_pip_requirements }}
+        pip_requirements: pip_requirements
+        extra_pip_requirements: extra_pip_requirements
         kwargs: kwargs to pass to ``spacy.save_model`` method.
         
     Returns:
