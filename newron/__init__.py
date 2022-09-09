@@ -5,7 +5,7 @@ For example:
 
 .. code:: python
 
-    import mlflow
+    import newron
 
     newron.init()
 
@@ -18,7 +18,7 @@ You can also use the context manager syntax like this:
 
 .. code:: python
 
-    import mlflow
+    import newron
 
     newron.init()
     
@@ -28,7 +28,7 @@ You can also use the context manager syntax like this:
 
 which automatically terminates the run at the end of the ``with`` block.
 """
-from mlflow.version import VERSION as __version__  # pylint: disable=unused-import
+from newron.version import VERSION as __version__  # pylint: disable=unused-import
 from mlflow.utils.logging_utils import _configure_mlflow_loggers
 
 
@@ -40,7 +40,6 @@ import warnings
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
-from mlflow import projects
 from newron import tracking
 from newron import models
 from newron import auth
@@ -53,7 +52,6 @@ _model_flavors_supported = []
 from newron import catboost
 from newron import fastai
 from newron import gluon
-#from newron import h2o
 from newron import keras
 from newron import lightgbm
 from mlflow import pyfunc
