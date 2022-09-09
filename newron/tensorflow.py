@@ -106,13 +106,13 @@ def log_model(
                                serialized ``SavedModel`` object. For more information, see the
                                ``tags`` parameter of the
                                ``tf.saved_model.builder.SavedModelBuilder`` method.
-        tf_signature_def_key: A string identifying the input{'/'}output signature associated with the
+        tf_signature_def_key: A string identifying the input/output signature associated with the
                                  model. This is a key within the serialized ``SavedModel`` signature
                                  definition mapping. For more information, see the
                                  ``signature_def_map`` parameter of the
                                  ``tf.saved_model.builder.SavedModelBuilder`` method.
         artifact_path: The run-relative path to which to log model artifacts.
-        conda_env: {{ conda_env }}
+        conda_env: conda_env
         code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
@@ -139,8 +139,8 @@ def log_model(
         await_registration_for: Number of seconds to wait for the model version to finish
                             being created and is in ``READY`` status. By default, the function
                             waits for five minutes. Specify 0 or None to skip waiting.
-        pip_requirements: {{ pip_requirements }}
-        extra_pip_requirements: {{ extra_pip_requirements }}
+        pip_requirements: pip_requirements
+        extra_pip_requirements: extra_pip_requirements
 
     Returns: 
             A :py:class:`ModelInfo <mlflow.models.model.ModelInfo>` instance that contains the
@@ -178,14 +178,14 @@ def save_model(
                                serialized ``SavedModel`` object. For more information, see the
                                ``tags`` parameter of the
                                ``tf.saved_model.builder.savedmodelbuilder`` method.
-        tf_signature_def_key: A string identifying the input{'/'}output signature associated with the
+        tf_signature_def_key: A string identifying the input/output signature associated with the
                                  model. This is a key within the serialized ``savedmodel``
                                  signature definition mapping. For more information, see the
                                  ``signature_def_map`` parameter of the
                                  ``tf.saved_model.builder.savedmodelbuilder`` method.
         path: Local path where the MLflow model is to be saved.
         mlflow_model: MLflow model configuration to which to add the ``tensorflow`` flavor.
-        conda_env: {{ conda_env }}
+        conda_env: conda_env
         code_paths: A list of local filesystem paths to Python file dependencies (or directories
                        containing file dependencies). These files are *prepended* to the system
                        path when the model is loaded.
@@ -206,8 +206,8 @@ def save_model(
                           example will be serialized to json using the Pandas split-oriented
                           format, or a numpy array where the example will be serialized to json
                           by converting it to a list. Bytes are base64-encoded.
-        pip_requirements: {{ pip_requirements }}
-        extra_pip_requirements: {{ extra_pip_requirements }}
+        pip_requirements: pip_requirements
+        extra_pip_requirements: extra_pip_requirements
     """
     frame = inspect.currentframe()
     args, _, _, values = inspect.getargvalues(frame)
