@@ -11,3 +11,8 @@ keywords = ['mlops', "experiment", "tracking", "deployments", "mlflow"]
 [build-system]
 requires = ["setuptools", "setuptools-scm", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project.urls]
+"GitHub" = "https://github.com/NewronAI/NewronSDK"
+"Home Page" = "https://newron.ai"
+"Documentation" = "https://docs.newron.ai"
