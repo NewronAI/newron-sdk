@@ -38,7 +38,7 @@ def get_default_pip_requirements():
     # Note: Prophet's whl build process will fail due to missing dependencies, defaulting
     # to setup.py installation process.
     # If a pystan installation error occurs, ensure gcc>=8 is installed in your environment.
-    # See: https:\\gcc.gnu.org\install\
+    # See: https://gcc.gnu.org/install/
     return [_get_pinned_requirement("prophet")]
 
 
@@ -160,14 +160,15 @@ def load_model(model_uri, dst_path=None):
     """
     Load a Prophet model from a local file or a run.
     Args:
-        model_uri: The location, in URI format, of the MLflow model. For example:
-                      * ``Users\me\path\to\local\model``
-                      * ``relative\path\to\local\model``
-                      * ``s3:\\my_bucket\path\to\model``
-                      * ``runs:\<mlflow_run_id>\run-relative\path\to\model``
-                      For more information about supported URI schemes, see
-                      `Referencing Artifacts <https:\\www.mlflow.org\docs\latest\tracking.html#
-                      artifact-locations>`.
+        model_uri: The location, in URI format, of the MLflow model. 
+                    For example:
+            * ``Users/me/path/to/local/model``
+            * ``relative/path/to/local/model``
+            * ``s3://my_bucket/path/to/model``
+            * ``runs:/<mlflow_run_id>/run-relative/path/to/model``
+                        
+            For more information about supported URI schemes, see
+            `Referencing Artifacts <https://www.mlflow.org/docs/latest/tracking.html#artifact-locations>`.
         dst_path: The local filesystem path to which to download the model artifact.
                      This directory must already exist. If unspecified, a local output
                      path will be created.

@@ -6,6 +6,7 @@ import webbrowser
 class Auth0():
     auth0url = "https://dev-pg1h84k1.us.auth0.com"
     url = auth0url + '/oauth/device/code'
+    userURL = auth0url + '/userinfo'
     clientId = "qhgH8CCF8riL9XYOZr8EPym8lxq3XEd3"
     audience = "https://grpc-api-gateway-d8q71ttn.uc.gateway.dev/"
     clientCredentials = {"client_id": clientId , "scope" : "openid email profile newron-server" , "audience" : audience}
@@ -69,4 +70,9 @@ class Auth0():
         if(op.status_code != 200 or maxPolls == 0):
             # print("Error: " + op.text)
             exit()
-        return op.json()
+        token = op.json()["access_token"]
+        headers = {"Authorization": "Bearer " + token}
+        userResponse = requests.get(userURL, headers = headers)
+        if not userResponse.json()["email_verified"]:
+            print("Pease Verify your email")
+        return userResponse.json()

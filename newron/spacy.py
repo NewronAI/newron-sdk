@@ -153,14 +153,14 @@ def load_model(model_uri, dst_path=None):
     Load a spaCy model from a local file (if ``run_id`` is ``None``) or a run.
     Args:    
         model_uri: The location, in URI format, of the MLflow model. For example:
-                      * ``Users\me\path\to\local\model``
-                      * ``relative\path\to\local\model``
-                      * ``s3:\\my_bucket\path\to\model``
-                      * ``runs:\<mlflow_run_id>\run-relative\path\to\model``
-                      * ``models:\<model_name>\<model_version>``
-                      * ``models:\<model_name>\<stage>``
+            * ``Users/me/path/to/local/model``
+            * ``relative/path/to/local/model``
+            * ``s3://my_bucket/path/to/model``
+            * ``runs:/<mlflow_run_id>/run-relative/path/to/model``
+            * ``models:/<model_name>/<model_version>``
+            * ``models:/<model_name>/<stage>``
                       For more information about supported URI schemes, see
-                      `Referencing Artifacts <https:\\www.mlflow.org\docs\latest\concepts.html#
+                      `Referencing Artifacts <https://www.mlflow.org/docs/latest/concepts.html#
                       artifact-locations>`.
         dst_path: The local filesystem path to which to download the model artifact.
                      This directory must already exist. If unspecified, a local output
