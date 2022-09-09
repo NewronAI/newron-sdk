@@ -30,7 +30,12 @@ if __name__ == "__main__":
         author = "Newron AI",
         author_email = "hello@newron.ai",
         description = "NewronAI: Machine Learning, Made Simple. Client SDK for Newron AI",
-        url='https://github.com/NewronAI/newron-mlflow-client',
+        url='https://newron.ai',
+        project_urls={
+                'Documentation': 'https://docs.newron.ai/',
+                'Source': 'https://github.com/NewronAI/NewronSDK/',
+                'Tracker': 'https://github.com/NewronAI/NewronSDK/issues',
+            },
         keywords= ['mlops', "experiment", "tracking", "deployments", "mlflow"],
         packages = ['newron'],
         license = 'Apache License',
