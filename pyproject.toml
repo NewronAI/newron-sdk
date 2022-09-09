@@ -1,0 +1,15 @@
+[project]
+name = "newron"
+version = "0.1.0"
+description = "NewronAI: Machine Learning, Made Simple. Client SDK for Newron AI"
+authors = ["Newron AI"]
+license = "Apache License"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = ["mlflow"]
+keywords = ['mlops', "experiment", "tracking", "deployments", "mlflow"]
+packages = ['newron']
+
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
