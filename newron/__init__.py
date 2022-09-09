@@ -43,8 +43,8 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 from newron import tracking
 from newron import models
 from newron import auth
+from mlflow import projects
 import newron.artifacts
-# import mlflow.pipelines
 
 # model flavors
 _model_flavors_supported = []
@@ -58,7 +58,6 @@ from mlflow import pyfunc
 from newron import pytorch
 from newron import sklearn
 from newron import spacy
-from newron import spark
 from newron import tensorflow
 from mlflow import xgboost
 from mlflow import shap

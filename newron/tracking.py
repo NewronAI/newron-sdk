@@ -79,7 +79,7 @@ def init(experiment_name, project_name, description=None):
     if auth_response:
         set_tracking_uri(SERVER_URI)
         import requests
-        url = "https://grpc-api-gateway-d8q71ttn.uc.gateway.dev/v1/set/project"
+        url = "https://grpc-api-gateway-7boevord.uc.gateway.dev/v1/project"
 
         payload = {}
         payload["accountId"] = auth_response["email"]
@@ -93,8 +93,7 @@ def init(experiment_name, project_name, description=None):
             "Content-Type": "application/json",
             "Authorization": "Bearer " + auth_response["access_token"]
         }
-        print(auth_response)
-        gateway_response = requests.request("POST", PROJECT_URI, json=payload, headers=headers).json()
-        set_experiment(experiment_id = gateway_response["mlflow"]["experimentId"])
+        gateway_response = requests.request("PUT", url, json=payload, headers=headers)
+        set_experiment(experiment_id = gateway_response.json()["mlflow"]["experimentId"])
     else:
         raise Exception("Authentication failed")

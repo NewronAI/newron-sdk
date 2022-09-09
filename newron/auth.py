@@ -72,7 +72,9 @@ class Auth0():
             exit()
         token = op.json()["access_token"]
         headers = {"Authorization": "Bearer " + token}
-        userResponse = requests.get(userURL, headers = headers)
+        userResponse = requests.get(self.userURL, headers = headers)
         if not userResponse.json()["email_verified"]:
             print("Pease Verify your email")
-        return userResponse.json()
+        userResponse = userResponse.json()
+        userResponse["access_token"] = token
+        return userResponse
