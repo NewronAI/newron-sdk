@@ -95,5 +95,6 @@ def init(experiment_name, project_name, description=None):
         }
         gateway_response = requests.request("PUT", url, json=payload, headers=headers)
         set_experiment(experiment_id = gateway_response.json()["mlflow"]["experimentId"])
+        newron.autolog()
     else:
         raise Exception("Authentication failed")
