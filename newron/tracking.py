@@ -59,19 +59,21 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     def request_headers(self):
         return {"project_id": Experiment.experiment_id}
 
-def init(experiment_name, project_name, description=None):
+       
+    def init(project_name, experiment_name = None, framework = None, exp_desc=None):
     """
     Function to initialise a tracking experiment with Newron. The function authenticates
     the user against the Newron server and allows the user to activate an experiment under 
     a project. 
-
     Args:
+ 
+        project_name: Case sensitive name of the project under which the experimentis
+                            to be activated.
         experiment_name: Case sensitive name of the experiment to be activated. If an experiment
                             with this name does not exist, a new experiment wth this name is
                             created.
-        project_name: Case sensitive name of the project under which the experimentis
-                            to be activated.
-        description: Description of the experiment being activated. In case the experiment had a 
+        framework: proide name of framework from the list of supported frameworks by newron
+        exp_desc: Description of the experiment being activated. In case the experiment had a 
                             description previously it would be overwritten by the new description.
     """
     _auth = Auth0()
@@ -80,6 +82,9 @@ def init(experiment_name, project_name, description=None):
         set_tracking_uri(SERVER_URI)
         import requests
         url = "https://grpc-api-gateway-7boevord.uc.gateway.dev/v1/project"
+
+        if experiment_name is None:
+          experiment_name = project_name
 
         payload = {}
         payload["accountId"] = auth_response["email"]
@@ -95,6 +100,29 @@ def init(experiment_name, project_name, description=None):
         }
         gateway_response = requests.request("PUT", url, json=payload, headers=headers)
         set_experiment(experiment_id = gateway_response.json()["mlflow"]["experimentId"])
-        #newron.autolog()
+
+
+        #if framework in ['sklearn','keras','tensorflow','pytorch','xgboost','fastai']:
+        #  eval('newron.{framework}.autolog()')
+        #else:
+        #  newron.autolog()
+
+        if framework in ['sklearn','keras','tensorflow','pytorch','xgboost','fastai']:
+          if framework == 'sklearn':
+            newron.sklearn.autolog()
+          elif framework == 'keras':
+            newron.keras.autolog()
+          elif framework == 'tensorflow':
+            newron.tensorflow.autolog()
+          elif framework == 'pytorch':
+            newron.pytorch.autolog()
+          elif framework == 'xgboost':
+            newron.xgboost.autolog()
+          elif framework == 'fastai':
+            newron.fastai.autolog()
+          else:
+            newron.autolog()
+        else:
+          newron.autolog()
     else:
         raise Exception("Authentication failed")
