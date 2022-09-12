@@ -59,7 +59,7 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     def request_headers(self):
         return {"project_id": Experiment.experiment_id}
 
-def init(project_name, experiment_name = None, framework = None, exp_desc=None):
+def init(project_name, experiment_name = None, framework = None, description=None):
     """
     Function to initialise a tracking experiment with Newron. The function authenticates
     the user against the Newron server and allows the user to activate an experiment under 
