@@ -82,6 +82,7 @@ def init(project_name, experiment_name = None, framework = None, description=Non
         set_tracking_uri(SERVER_URI)
         import requests
         url = "https://grpc-api-gateway-7boevord.uc.gateway.dev/v1/project"
+        url = PROJECT_URI
 
         if experiment_name is None:
           experiment_name = project_name
@@ -110,17 +111,17 @@ def init(project_name, experiment_name = None, framework = None, description=Non
 
         if framework in ['sklearn','keras','tensorflow','pytorch','xgboost','fastai']:
           if framework == 'sklearn':
-            newron.sklearn.autolog()
+            mlflow.sklearn.autolog()
           elif framework == 'keras':
-            newron.keras.autolog()
+            mlflow.keras.autolog()
           elif framework == 'tensorflow':
-            newron.tensorflow.autolog()
+            mlflow.tensorflow.autolog()
           elif framework == 'pytorch':
-            newron.pytorch.autolog()
+            mlflow.pytorch.autolog()
           elif framework == 'xgboost':
-            newron.xgboost.autolog()
+            mlflow.xgboost.autolog()
           elif framework == 'fastai':
-            newron.fastai.autolog()
+            mlflow.fastai.autolog()
           else:
             mlflow.autolog()
         else:
