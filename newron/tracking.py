@@ -82,7 +82,7 @@ def init(project_name, experiment_name = None, framework = None, description=Non
         set_tracking_uri(SERVER_URI)
         import requests
         url = "https://grpc-api-gateway-7boevord.uc.gateway.dev/v1/project"
-        url = PROJECT_URI
+        #url = PROJECT_URI
 
         if experiment_name is None:
           experiment_name = project_name
