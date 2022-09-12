@@ -59,8 +59,7 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     def request_headers(self):
         return {"project_id": Experiment.experiment_id}
 
-       
-    def init(project_name, experiment_name = None, framework = None, exp_desc=None):
+def init(project_name, experiment_name = None, framework = None, exp_desc=None):
     """
     Function to initialise a tracking experiment with Newron. The function authenticates
     the user against the Newron server and allows the user to activate an experiment under 
@@ -75,8 +74,7 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
         framework: proide name of framework from the list of supported frameworks by newron
         exp_desc: Description of the experiment being activated. In case the experiment had a 
                             description previously it would be overwritten by the new description.
-     """
-    
+    """
     _auth = Auth0()
     auth_response = _auth.authenticate()
     if auth_response:
@@ -127,3 +125,5 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
           newron.autolog()
     else:
         raise Exception("Authentication failed")
+       
+
