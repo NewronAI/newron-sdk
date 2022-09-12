@@ -75,7 +75,8 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
         framework: proide name of framework from the list of supported frameworks by newron
         exp_desc: Description of the experiment being activated. In case the experiment had a 
                             description previously it would be overwritten by the new description.
-    """
+     """
+    
     _auth = Auth0()
     auth_response = _auth.authenticate()
     if auth_response:
