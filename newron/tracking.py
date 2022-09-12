@@ -75,6 +75,7 @@ def init(project_name, experiment_name = None, framework = None, exp_desc=None):
         exp_desc: Description of the experiment being activated. In case the experiment had a 
                             description previously it would be overwritten by the new description.
     """
+    
     _auth = Auth0()
     auth_response = _auth.authenticate()
     if auth_response:
