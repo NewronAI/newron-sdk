@@ -26,7 +26,7 @@ if sys.argv[-1] == 'setup.py':
 if __name__ == "__main__":
     setup(
         name = "NewronSDK",
-        version = "0.1.7",
+        version = "0.1.1",
         author = "Newron AI",
         author_email = "hello@newron.ai",
         description = "NewronAI: Machine Learning, Made Simple. Client SDK for Newron AI",
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         keywords= ['mlops', "experiment", "tracking", "deployments", "mlflow"],
         packages = ['newron'],
         license = 'Apache License',
-        install_requires = ["mlflow==1.23.0"],
+        install_requires = ["mlflow"],
         entry_points="""
                         [console_scripts]
                         newron=newron.cli:cli

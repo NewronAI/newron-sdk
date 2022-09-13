@@ -115,17 +115,17 @@ def init(project_name, experiment_name = None, framework = None, description=Non
         if framework in ['sklearn','keras','tensorflow','pytorch','xgboost','fastai']:
           print(f'Autolog is enabled for {framework}')
           if framework == 'sklearn':
-            newron.sklearn.autolog()
+            mlflow.sklearn.autolog()
           elif framework == 'keras':
-            newron.tensorflow.autolog()
+            mlflow.tensorflow.autolog()
           elif framework == 'tensorflow':
-            newron.tensorflow.autolog()
+            mlflow.tensorflow.autolog()
           elif framework == 'pytorch':
-            newron.pytorch.autolog()
+            mlflow.pytorch.autolog()
           elif framework == 'xgboost':
-            newron.xgboost.autolog()
+            mlflow.xgboost.autolog()
           elif framework == 'fastai':
-            newron.fastai.autolog()
+            mlflow.fastai.autolog()
           else:
             mlflow.autolog()
         else:

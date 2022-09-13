@@ -1,11 +1,11 @@
 [project]
 name = "newron"
-version = "0.1.7"
+version = "0.1.1"
 description = "NewronAI: Machine Learning, Made Simple. Client SDK for Newron AI"
 authors = [{ name = "Newron AI", email = "hello@newron.ai" }]
 readme = "README.md"
 requires-python = ">=3.7"
-#dependencies = ["mlflow"]
+dependencies = ["mlflow"]
 keywords = ['mlops', "experiment", "tracking", "deployments", "mlflow"]
 
 [build-system]
