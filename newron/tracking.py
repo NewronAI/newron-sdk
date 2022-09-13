@@ -92,7 +92,8 @@ def init(project_name, experiment_name = None, framework = None, description=Non
 
         payload = {}
         payload["accountId"] = auth_response["email"]
-        payload["userId"] = auth_response["sub"].split("|")[1]
+        payload["userId"] = auth_response["email"]
+        ##auth_response["sub"].split("|")[1]
         payload["projectName"] = project_name
         payload["experimentName"] = experiment_name
         if description:
