@@ -80,11 +80,9 @@ def init(project_name, experiment_name = None, framework = None, description=Non
     _auth = Auth0()
     auth_response = _auth.authenticate()
     if auth_response:
-        print(SERVER_URI)
         set_tracking_uri(SERVER_URI)
-        print(get_tracking_uri())
         import requests
-        #url = "https://grpc-api-gateway-7boevord.uc.gateway.dev/v1/project"
+        
         url = PROJECT_URI
 
         if experiment_name is None:
@@ -115,22 +113,24 @@ def init(project_name, experiment_name = None, framework = None, description=Non
         #  newron.autolog()
 
         if framework in ['sklearn','keras','tensorflow','pytorch','xgboost','fastai']:
+          print(f'Autolog is enabled for {framework}')
           if framework == 'sklearn':
-            mlflow.sklearn.autolog()
+            newron.sklearn.autolog()
           elif framework == 'keras':
-            mlflow.tensorflow.autolog()
+            newron.tensorflow.autolog()
           elif framework == 'tensorflow':
-            mlflow.tensorflow.autolog()
+            newron.tensorflow.autolog()
           elif framework == 'pytorch':
-            mlflow.pytorch.autolog()
+            newron.pytorch.autolog()
           elif framework == 'xgboost':
-            mlflow.xgboost.autolog()
+            newron.xgboost.autolog()
           elif framework == 'fastai':
-            mlflow.fastai.autolog()
+            newron.fastai.autolog()
           else:
-            mlflow.autolog()
+            newron.autolog()
         else:
-          mlflow.autolog()
+          newron.autolog()
+          print(f'Default Autolog is enabled')
     else:
         raise Exception("Authentication failed")
        
