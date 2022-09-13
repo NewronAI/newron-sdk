@@ -33,6 +33,7 @@ _AutologgingMetricsManager = mlflow.sklearn._AutologgingMetricsManager
 _autolog = mlflow.sklearn._autolog
 _eval_and_log_metrics_impl = mlflow.sklearn._eval_and_log_metrics_impl 
 _get_metric_name_list = mlflow.sklearn._get_metric_name_list
+log_model = mlflow.sklearn.log_model
 
 def get_default_pip_requirements(include_cloudpickle=False):
     """
@@ -131,116 +132,7 @@ def save_model(
     del values["frame"]
     mlflow.sklearn.save_model(**values)
 
-def log_model(
-    sk_model,
-    artifact_path,
-    conda_env=None,
-    code_paths=None,
-    serialization_format=SERIALIZATION_FORMAT_CLOUDPICKLE,
-    registered_model_name=None,
-    signature: ModelSignature = None,
-    input_example: ModelInputExample = None,
-    await_registration_for=DEFAULT_AWAIT_MAX_SLEEP_SECONDS,
-    pip_requirements=None,
-    extra_pip_requirements=None,
-    pyfunc_predict_fn="predict",
-):
-    """
-    Log a scikit-learn model as an MLflow artifact for the current run. Produces an MLflow Model
-    containing the following flavors:
-        - :py:mod:`mlflow.sklearn`
-        - :py:mod:`mlflow.pyfunc`. NOTE: This flavor is only included for scikit-learn models
-          that define `predict()`, since `predict()` is required for pyfunc model inference.
-    :param sk_model: scikit-learn model to be saved.
-    :param artifact_path: Run-relative artifact path.
-    :param conda_env: {{ conda_env }}
-    :param code_paths: A list of local filesystem paths to Python file dependencies (or directories
-                       containing file dependencies). These files are *prepended* to the system
-                       path when the model is loaded.
-    :param serialization_format: The format in which to serialize the model. This should be one of
-                                 the formats listed in
-                                 ``mlflow.sklearn.SUPPORTED_SERIALIZATION_FORMATS``. The Cloudpickle
-                                 format, ``mlflow.sklearn.SERIALIZATION_FORMAT_CLOUDPICKLE``,
-                                 provides better cross-system compatibility by identifying and
-                                 packaging code dependencies with the serialized model.
-    :param registered_model_name: If given, create a model version under
-                                  ``registered_model_name``, also creating a registered model if one
-                                  with the given name does not exist.
-    :param signature: :py:class:`ModelSignature <mlflow.models.ModelSignature>`
-                      describes model input and output :py:class:`Schema <mlflow.types.Schema>`.
-                      The model signature can be :py:func:`inferred <mlflow.models.infer_signature>`
-                      from datasets with valid model input (e.g. the training dataset with target
-                      column omitted) and valid model output (e.g. model predictions generated on
-                      the training dataset), for example:
-                      .. code-block:: python
-                        from mlflow.models.signature import infer_signature
-                        train = df.drop_column("target_label")
-                        predictions = ... # compute model predictions
-                        signature = infer_signature(train, predictions)
-    :param input_example: Input example provides one or several instances of valid
-                          model input. The example can be used as a hint of what data to feed the
-                          model. The given example will be converted to a Pandas DataFrame and then
-                          serialized to json using the Pandas split-oriented format. Bytes are
-                          base64-encoded.
-    :param await_registration_for: Number of seconds to wait for the model version to finish
-                            being created and is in ``READY`` status. By default, the function
-                            waits for five minutes. Specify 0 or None to skip waiting.
-    :param pip_requirements: {{ pip_requirements }}
-    :param extra_pip_requirements: {{ extra_pip_requirements }}
-    :param pyfunc_predict_fn: The name of the prediction function to use for inference with the
-           pyfunc representation of the resulting MLflow Model; e.g. ``"predict_proba"``.
-    :return: A :py:class:`ModelInfo <mlflow.models.model.ModelInfo>` instance that contains the
-             metadata of the logged model.
-    .. code-block:: python
-        :caption: Example
-        import mlflow
-        import mlflow.sklearn
-        from sklearn.datasets import load_iris
-        from sklearn import tree
-        iris = load_iris()
-        sk_model = tree.DecisionTreeClassifier()
-        sk_model = sk_model.fit(iris.data, iris.target)
-        # set the artifact_path to location where experiment artifacts will be saved
-        #log model params
-        mlflow.log_param("criterion", sk_model.criterion)
-        mlflow.log_param("splitter", sk_model.splitter)
-        # log model
-        mlflow.sklearn.log_model(sk_model, "sk_models")
-    """
-    frame = inspect.currentframe()
-    args, _, _, values = inspect.getargvalues(frame)
-    del values["frame"]
-    return mlflow.sklearn.log_model(**values)
 
-def load_model(model_uri, dst_path=None):
-    """
-    Load a scikit-learn model from a local file or a run.
-    :param model_uri: The location, in URI format, of the MLflow model, for example:
-                      - ``Users\me\path\to\local\model``
-                      - ``relative\path\to\local\model``
-                      - ``s3:\\my_bucket\path\to\model``
-                      - ``runs:\<mlflow_run_id>\run-relative\path\to\model``
-                      - ``models:\<model_name>\<model_version>``
-                      - ``models:\<model_name>\<stage>``
-                      For more information about supported URI schemes, see
-                      `Referencing Artifacts <https:\\www.mlflow.org\docs\latest\concepts.html#
-                      artifact-locations>`.
-    :param dst_path: The local filesystem path to which to download the model artifact.
-                     This directory must already exist. If unspecified, a local output
-                     path will be created.
-    :return: A scikit-learn model.
-    .. code-block:: python
-        :caption: Example
-        import mlflow.sklearn
-        sk_model = mlflow.sklearn.load_model("runs:\96771d893a5e46159d9f3b49bf9013e2\sk_models")
-        # use Pandas DataFrame to make predictions
-        pandas_df = ...
-        predictions = sk_model.predict(pandas_df)
-    """
-    frame = inspect.currentframe()
-    args, _, _, values = inspect.getargvalues(frame)
-    del values["frame"]
-    return mlflow.sklearn.load_model(**values)
 
 def eval_and_log_metrics(model, X, y_true, *, prefix, sample_weight=None, pos_label=None):
     """
