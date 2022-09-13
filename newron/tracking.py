@@ -81,8 +81,8 @@ def init(project_name, experiment_name = None, framework = None, description=Non
     if auth_response:
         set_tracking_uri(SERVER_URI)
         import requests
-        url = "https://grpc-api-gateway-7boevord.uc.gateway.dev/v1/project"
-        #url = PROJECT_URI
+        #url = "https://grpc-api-gateway-7boevord.uc.gateway.dev/v1/project"
+        url = PROJECT_URI
 
         if experiment_name is None:
           experiment_name = project_name
@@ -113,7 +113,7 @@ def init(project_name, experiment_name = None, framework = None, description=Non
           if framework == 'sklearn':
             mlflow.sklearn.autolog()
           elif framework == 'keras':
-            mlflow.keras.autolog()
+            mlflow.tensorflow.autolog()
           elif framework == 'tensorflow':
             mlflow.tensorflow.autolog()
           elif framework == 'pytorch':
