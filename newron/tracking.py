@@ -80,7 +80,9 @@ def init(project_name, experiment_name = None, framework = None, description=Non
     _auth = Auth0()
     auth_response = _auth.authenticate()
     if auth_response:
+        print(SERVER_URI)
         set_tracking_uri(SERVER_URI)
+        print(get_tracking_uri())
         import requests
         #url = "https://grpc-api-gateway-7boevord.uc.gateway.dev/v1/project"
         url = PROJECT_URI
@@ -102,6 +104,7 @@ def init(project_name, experiment_name = None, framework = None, description=Non
         }
         gateway_response = requests.request("PUT", url, json=payload, headers=headers)
         print(gateway_response.json())
+        print(get_tracking_uri())
         set_experiment(experiment_id = gateway_response.json()["mlflow"]["experimentId"])
 
 
