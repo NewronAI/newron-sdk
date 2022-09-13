@@ -127,9 +127,9 @@ def init(project_name, experiment_name = None, framework = None, description=Non
           elif framework == 'fastai':
             newron.fastai.autolog()
           else:
-            newron.autolog()
+            mlflow.autolog()
         else:
-          newron.autolog()
+          mlflow.autolog()
           print(f'Default Autolog is enabled')
     else:
         raise Exception("Authentication failed")
