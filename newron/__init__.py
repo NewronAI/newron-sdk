@@ -45,7 +45,6 @@ from newron import models
 from newron import auth
 from mlflow import projects
 import newron.artifacts
-from mlflow import pyfunc
 
 # model flavors
 _model_flavors_supported = []
