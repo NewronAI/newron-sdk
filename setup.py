@@ -39,7 +39,7 @@ if __name__ == "__main__":
         keywords= ['mlops', "experiment", "tracking", "deployments", "mlflow"],
         packages = ['newron'],
         license = 'Apache License',
-        install_requires = ["mlflow"],
+        install_requires = ["mlflow==1.23.0"],
         entry_points="""
                         [console_scripts]
                         newron=newron.cli:cli
