@@ -69,20 +69,16 @@ from newron import diviner
 _model_flavors_supported = [
     "catboost",
     "fastai",
-    "gluon",
     "keras",
     "lightgbm",
     "pyfunc",
     "pytorch",
     "sklearn",
     "spacy",
-    "spark",
     "tensorflow",
     "xgboost",
-    "shap",
-    "paddle",
     "prophet",
-    "diviner",
+
 ]
 
 _configure_mlflow_loggers(root_module_name=__name__)
@@ -111,16 +107,16 @@ _configure_mlflow_loggers(root_module_name=__name__)
 #search_experiments = mlflow.tracking.search_experiments 
 #Marked as experimental
 
-get_tracking_uri = tracking.get_tracking_uri
-get_registry_uri = tracking.get_registry_uri
-create_experiment = tracking.create_experiment
-set_experiment = tracking.set_experiment
+#get_tracking_uri = tracking.get_tracking_uri
+#get_registry_uri = tracking.get_registry_uri
+#create_experiment = tracking.create_experiment
+#set_experiment = tracking.set_experiment
 log_params = tracking.log_params
 log_metrics = tracking.log_metrics
 set_experiment_tags = tracking.set_experiment_tags
 set_experiment_tag = tracking.set_experiment_tag
 set_tags = tracking.set_tags
-delete_experiment = tracking.delete_experiment  
+#delete_experiment = tracking.delete_experiment  
 delete_run = tracking.delete_run
 register_model = tracking.register_model
 autolog = tracking.autolog
@@ -145,11 +141,11 @@ end_run = tracking.end_run
 search_runs = tracking.search_runs
 list_run_infos = tracking.list_run_infos
 get_artifact_uri = tracking.get_artifact_uri
-set_tracking_uri = tracking.set_tracking_uri
-set_registry_uri = tracking.set_registry_uri
-get_experiment = tracking.get_experiment
-get_experiment_by_name = tracking.get_experiment_by_name
-list_experiments = tracking.list_experiments
+#set_tracking_uri = tracking.set_tracking_uri
+#set_registry_uri = tracking.set_registry_uri
+#get_experiment = tracking.get_experiment
+#get_experiment_by_name = tracking.get_experiment_by_name
+#list_experiments = tracking.list_experiments
 run = projects.run
 init = tracking.init
 
@@ -176,24 +172,26 @@ __all__ = [
     "end_run",
     "search_runs",
     "get_artifact_uri",
-    "get_tracking_uri",
-    "set_tracking_uri",
-    "get_experiment",
-    "get_experiment_by_name",
-    "list_experiments",
-    "search_experiments",
-    "create_experiment",
-    "set_experiment",
-    "delete_experiment",
+    "get_tracking_uri",    
     "get_run",
     "delete_run",
     "run",
     "register_model",
-    "get_registry_uri",
-    "set_registry_uri",
+    "get_registry_uri",    
     "list_run_infos",
     "autolog",
     "evaluate",
     "last_active_run",
     "NewronClient",
 ] + _model_flavors_supported
+
+# To Do
+#"set_tracking_uri",
+#    "get_experiment",
+#    "get_experiment_by_name",
+#        "list_experiments",
+#    "search_experiments",
+#    "create_experiment",
+#    "set_experiment",
+#    "delete_experiment",
+ #   "set_registry_uri",
