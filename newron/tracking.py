@@ -51,6 +51,9 @@ SERVER_URI = "https://mlflow-tracking-server-zx44gn5asa-uc.a.run.app"
 PROJECT_URI = "https://api.newron.ai/v1/project"
 DEFAULT_AWAIT_MAX_SLEEP_SECONDS = 5 * 60
 
+import logging
+logging.getLogger("mlflow").setLevel(logging.ERROR)
+
 class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     """RequestHeaderProvider provided through plugin system"""
 
@@ -60,7 +63,7 @@ class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     def request_headers(self):
         return {"project_id": Experiment.experiment_id}
 
-def init(project_name, experiment_name = None, framework = None, description=None):
+def init(project_name, experiment_name = 'Default', description=None):
     """
     Function to initialise a tracking experiment with Newron. The function authenticates
     the user against the Newron server and allows the user to activate an experiment under 
@@ -81,13 +84,8 @@ def init(project_name, experiment_name = None, framework = None, description=Non
     auth_response = _auth.authenticate()
     if auth_response:
         set_tracking_uri(SERVER_URI)
-        import requests
-        
+        import requests        
         url = PROJECT_URI
-
-        if experiment_name is None:
-          experiment_name = project_name
-
         payload = {}
         payload["accountId"] = auth_response["email"]
         payload["userId"] = auth_response["email"]
@@ -102,8 +100,7 @@ def init(project_name, experiment_name = None, framework = None, description=Non
             "Authorization": "Bearer " + auth_response["access_token"]
         }
         gateway_response = requests.request("PUT", url, json=payload, headers=headers)
-        print(gateway_response.json())
-        print(get_tracking_uri())
+
         set_experiment(experiment_id = gateway_response.json()["mlflow"]["experimentId"])
 
 
@@ -112,25 +109,8 @@ def init(project_name, experiment_name = None, framework = None, description=Non
         #else:
         #  newron.autolog()
 
-        if framework in ['sklearn','keras','tensorflow','pytorch','xgboost','fastai']:
-          print(f'Autolog is enabled for {framework}')
-          if framework == 'sklearn':
-            mlflow.sklearn.autolog()
-          elif framework == 'keras':
-            mlflow.tensorflow.autolog()
-          elif framework == 'tensorflow':
-            mlflow.tensorflow.autolog()
-          elif framework == 'pytorch':
-            mlflow.pytorch.autolog()
-          elif framework == 'xgboost':
-            mlflow.xgboost.autolog()
-          elif framework == 'fastai':
-            mlflow.fastai.autolog()
-          else:
-            mlflow.autolog()
-        else:
-          mlflow.autolog()
-          print(f'Default Autolog is enabled')
+        mlflow.autolog()
+        
     else:
         raise Exception("Authentication failed")
        
