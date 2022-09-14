@@ -51,7 +51,7 @@ _model_flavors_supported = []
     # pylint: disable=unused-import
 from newron import catboost
 from newron import fastai
-from newron import gluon
+#from newron import gluon
 from newron import keras
 from newron import lightgbm
 from mlflow import pyfunc
@@ -60,11 +60,11 @@ from newron import sklearn
 from newron import spacy
 from newron import tensorflow
 from mlflow import xgboost
-from mlflow import shap
-from mlflow import pyspark
-from mlflow import paddle
-from newron import prophet
-from newron import diviner
+#from mlflow import shap
+#from mlflow import pyspark
+#from mlflow import paddle
+#from newron import prophet
+#from newron import diviner
 
 _model_flavors_supported = [
     "catboost",
@@ -113,8 +113,8 @@ _configure_mlflow_loggers(root_module_name=__name__)
 #set_experiment = tracking.set_experiment
 log_params = tracking.log_params
 log_metrics = tracking.log_metrics
-set_experiment_tags = tracking.set_experiment_tags
-set_experiment_tag = tracking.set_experiment_tag
+#set_experiment_tags = tracking.set_experiment_tags
+#set_experiment_tag = tracking.set_experiment_tag
 set_tags = tracking.set_tags
 #delete_experiment = tracking.delete_experiment  
 delete_run = tracking.delete_run
@@ -156,8 +156,6 @@ __all__ = [
     "log_params",
     "log_metric",
     "log_metrics",
-    "set_experiment_tags",
-    "set_experiment_tag",
     "set_tag",
     "set_tags",
     "delete_tag",
@@ -195,3 +193,5 @@ __all__ = [
 #    "set_experiment",
 #    "delete_experiment",
  #   "set_registry_uri",
+ #"set_experiment_tags",
+#  "set_experiment_tag",

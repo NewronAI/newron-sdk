@@ -1,6 +1,6 @@
 [project]
 name = "newron"
-version = "0.1.4"
+version = "0.1.5"
 description = "NewronAI: Machine Learning, Made Simple. Client SDK for Newron AI"
 authors = [{ name = "Newron AI", email = "hello@newron.ai" }]
 readme = "README.md"
