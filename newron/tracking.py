@@ -46,8 +46,8 @@ get_experiment = mlflow.tracking.fluent.get_experiment
 get_experiment_by_name = mlflow.tracking.fluent.get_experiment_by_name
 list_experiments = mlflow.tracking.fluent.list_experiments
 
-SERVER_URI = "https://mlflow-tracking-server-zx44gn5asa-uc.a.run.app"
 
+SERVER_URI = "https://api.newron.ai"
 PROJECT_URI = "https://api.newron.ai/v1/project"
 DEFAULT_AWAIT_MAX_SLEEP_SECONDS = 5 * 60
 
