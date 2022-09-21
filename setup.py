@@ -27,7 +27,7 @@ if sys.argv[-1] == 'setup.py':
 if __name__ == "__main__":
     setup(
         name="newron",
-        version="0.1.5",
+        version="0.1.6",
         author="Newron AI",
         author_email="hello@newron.ai",
         description="NewronAI: Machine Learning, Made Simple. Client SDK for Newron AI",
