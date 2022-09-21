@@ -8,7 +8,8 @@ class Auth0():
     url = auth0url + '/oauth/device/code'
     userURL = auth0url + '/userinfo'
     clientId = "qhgH8CCF8riL9XYOZr8EPym8lxq3XEd3"
-    audience = "https://grpc-api-gateway-d8q71ttn.uc.gateway.dev/"
+    
+    audience = "https://api.newron.ai"
     clientCredentials = {"client_id": clientId , "scope" : "openid email profile newron-server" , "audience" : audience}
 
     def __init__(self) -> None:
