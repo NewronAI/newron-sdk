@@ -100,7 +100,7 @@ def init(project_name, experiment_name = 'Default', description=None):
             "Authorization": "Bearer " + auth_response["access_token"]
         }
         gateway_response = requests.request("PUT", url, json=payload, headers=headers)
-
+        print(gateway_response)
         set_experiment(experiment_id = gateway_response.json()["mlflow"]["experimentId"])
 
 
