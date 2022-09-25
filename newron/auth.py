@@ -4,7 +4,8 @@ import time
 import webbrowser
 
 class Auth0():
-    auth0url = "https://dev-pg1h84k1.us.auth0.com"
+    #auth0url = "https://dev-pg1h84k1.us.auth0.com"
+    auth0url ="https://auth.newron.ai/"
     url = auth0url + '/oauth/device/code'
     userURL = auth0url + '/userinfo'
     clientId = "qhgH8CCF8riL9XYOZr8EPym8lxq3XEd3"
