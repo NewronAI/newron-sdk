@@ -50,6 +50,7 @@ SERVER_URI = "https://mlflow-tracking-server-zx44gn5asa-uc.a.run.app"
 SERVER_URI = "https://api.newron.ai"
 
 PROJECT_URI = "https://api.newron.ai/v1/project"
+PROJECT_URI = "https://api.newron.ai"
 DEFAULT_AWAIT_MAX_SLEEP_SECONDS = 5 * 60
 
 import logging
