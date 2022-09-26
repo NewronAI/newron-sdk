@@ -4,14 +4,14 @@ import time
 import webbrowser
 
 class Auth0():
-    auth0url = "https://dev-pg1h84k1.us.auth0.com"
+    auth0url = "https://auth.newron.ai"
     #auth0url ="https://auth.newron.ai/"
     url = auth0url + '/oauth/device/code'
     userURL = auth0url + '/userinfo'
     clientId = "qhgH8CCF8riL9XYOZr8EPym8lxq3XEd3"
     
     audience = "https://api.newron.ai"
-    clientCredentials = {"client_id": clientId , "scope" : "openid email profile newron-server" , "audience" : audience}
+    clientCredentials = {"client_id": clientId , "scope" : "openid email profile newron-server" , "audience" : audience + "/"}
 
     def __init__(self) -> None:
         pass
@@ -80,3 +80,7 @@ class Auth0():
         userResponse = userResponse.json()
         userResponse["access_token"] = token
         return userResponse
+
+if __name__ == "__main__":
+    auth = Auth0()
+    auth.authenticate()
