@@ -2,6 +2,7 @@ import os
 import requests
 import time
 import webbrowser
+from sys import exit
 
 class Auth0():
     auth0url = "https://auth.newron.ai"
