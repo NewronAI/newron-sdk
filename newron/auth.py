@@ -5,13 +5,13 @@ import webbrowser
 
 class Auth0():
     auth0url = "https://auth.newron.ai"
-    #auth0url ="https://auth.newron.ai/"
+
     url = auth0url + '/oauth/device/code'
     userURL = auth0url + '/userinfo'
     clientId = "qhgH8CCF8riL9XYOZr8EPym8lxq3XEd3"
     
     audience = "https://api.newron.ai"
-    clientCredentials = {"client_id": clientId , "scope" : "openid email profile newron-server" , "audience" : audience + "/"}
+    clientCredentials = {"client_id": clientId, "scope" : "openid email profile newron-server", "audience" : audience}
 
     def __init__(self) -> None:
         pass
