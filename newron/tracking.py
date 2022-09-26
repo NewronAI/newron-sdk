@@ -54,7 +54,7 @@ PROJECT_URI = "https://api.newron.ai/v1/project"
 DEFAULT_AWAIT_MAX_SLEEP_SECONDS = 5 * 60
 
 import logging
-logging.getLogger("mlflow").setLevel(logging.DEBUG)
+logging.getLogger("mlflow").setLevel(logging.ERROR)
 
 class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     """RequestHeaderProvider provided through plugin system"""
@@ -102,7 +102,7 @@ def init(project_name, experiment_name = 'Default', description=None):
             "Authorization": "Bearer " + auth_response["access_token"]
         }
         gateway_response = requests.request("PUT", url, json=payload, headers=headers)
-        print(gateway_response)
+        
         set_experiment(experiment_id = gateway_response.json()["mlflow"]["experimentId"])
 
 
