@@ -54,7 +54,7 @@ PROJECT_URI = "https://api.newron.ai/v1/project"
 DEFAULT_AWAIT_MAX_SLEEP_SECONDS = 5 * 60
 
 import logging
-logging.getLogger("mlflow").setLevel(logging.ERROR)
+logging.getLogger("mlflow").setLevel(logging.DEBUG)
 
 class NewronPluginRequestHeaderProvider(RequestHeaderProvider):
     """RequestHeaderProvider provided through plugin system"""
