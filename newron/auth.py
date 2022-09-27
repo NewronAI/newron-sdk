@@ -4,21 +4,26 @@ import time
 import webbrowser
 from sys import exit
 
-class Auth0():
+from newron.token_store import TokenStore
+
+
+class Auth0:
+    token_store = TokenStore()
+
     auth0url = "https://auth.newron.ai"
 
     url = auth0url + '/oauth/device/code'
     userURL = auth0url + '/userinfo'
     clientId = "qhgH8CCF8riL9XYOZr8EPym8lxq3XEd3"
-    
+
     audience = "https://api.newron.ai"
-    clientCredentials = {"client_id": clientId, "scope" : "openid email profile newron-server", "audience" : audience}
+    clientCredentials = {"client_id": clientId, "scope": "openid email profile newron-server", "audience": audience}
 
     def __init__(self) -> None:
         pass
 
-    def authenticate(self):
-        x = requests.post(self.url, json = self.clientCredentials)
+    def do_device_login(self):
+        x = requests.post(self.url, json=self.clientCredentials)
         if x.status_code != 200:
             print("Error in verification: " + str(x.status_code))
             print(x.text)
@@ -32,56 +37,72 @@ class Auth0():
         # Step 2: Open Webbrowser
         webbrowser.open(resp["verification_uri_complete"])
         # Step 3: Poll for token
-        pollUrl = self.auth0url + "/oauth/token"
-        pollObj = { 
+        poll_url = self.auth0url + "/oauth/token"
+        poll_obj = {
             "client_id": self.clientId,
             "device_code": resp["device_code"],
             "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
         }
-        maxPolls = 60
-        op = requests.post(pollUrl, json = pollObj)
-        opJson = op.json()
+        max_polls = 60
+        op = requests.post(poll_url, json=poll_obj)
+        op_json = op.json()
         failed_polls = 0
         # print(op.text)
         # print(op.status_code)
-        while op.status_code != 200 and maxPolls > 0:
-            op = requests.post(pollUrl, json = pollObj)
-            opJson = op.json()
-            maxPolls -= 1
+        while op.status_code != 200 and max_polls > 0:
+            op = requests.post(poll_url, json=poll_obj)
+            op_json = op.json()
+            max_polls -= 1
             if op.status_code == 200:
                 print("Authorization Successful")
-                break;
+                break
             if op.status_code == 400 or op.status_code == 401:
                 print("Authorization Failed")
-                exit();
-            if opJson["error"] == "invalid_grant":
+                exit()
+            if op_json["error"] == "invalid_grant":
                 print("Authorization Failed")
-                break;
-            if opJson["error"] == "authorization_pending":
-                print("Authorization Pending")
+                break
+            if op_json["error"] == "authorization_pending":
+                # print("Authorization Pending")
                 time.sleep(2)
-            elif opJson["error"] == "slow_down":
+            elif op_json["error"] == "slow_down":
                 if failed_polls == 0:
-                    time.sleep(10)
+                    time.sleep(5)
                 else:
-                    print("Waiting for Authorization")
-                    time.sleep(8)
-                failed_polls+=1
+                    wait_str = "."
+                    for i in range(0, failed_polls):
+                        wait_str += "."
+
+                    print("\rWaiting for Authorization" + wait_str, end="")
+                    time.sleep(7)
+                failed_polls += 1
             else:
                 time.sleep(10)
                 break
-        if(op.status_code != 200 or maxPolls == 0):
+        if op.status_code != 200 or max_polls == 0:
             # print("Error: " + op.text)
             exit()
-        token = op.json()["access_token"]
+        return op_json
+
+    def authenticate(self):
+
+        if self.token_store.is_valid() is False or self.token_store.is_expired() is True:
+            auth_output = self.do_device_login()
+            self.token_store.set_refresh_token(auth_output["id_token"])
+            self.token_store.set_auth_token(auth_output["access_token"])
+            self.token_store.set_expires_at(auth_output["expires_in"] + int(time.time()))
+
+        token = self.token_store.get_auth_token()
+
         headers = {"Authorization": "Bearer " + token}
-        userResponse = requests.get(self.userURL, headers = headers)
-        if not userResponse.json()["email_verified"]:
-            print("Pease Verify your email")
-        userResponse = userResponse.json()
-        userResponse["access_token"] = token
-        return userResponse
+        user_response = requests.get(self.userURL, headers=headers)
+        if not user_response.json()["email_verified"]:
+            print("Please Verify your email")
+        user_response = user_response.json()
+        user_response["access_token"] = token
+        return user_response
+
 
 if __name__ == "__main__":
     auth = Auth0()
-    auth.authenticate()
+    print(auth.authenticate())
