@@ -37,7 +37,6 @@ def find_config_folder(config_folder_name=".newron", path=None):
 def find_config_file(config_file_name, path=None):
     # Finds config file in the current directory or in the parent directory or their parent directory till root,
     config_folder = find_config_folder(path=path)
-    print(config_folder)
     if config_folder:
         return find_file(config_file_name, config_folder)
     else:
@@ -46,3 +45,10 @@ def find_config_file(config_file_name, path=None):
 
 def get_path_in_home_dir(file_name="", path=".newron"):
     return os.path.join(os.path.expanduser("~"), path, file_name)
+
+if __name__ == "__main__":
+    print("1", find_config_file("runtime.config.pkl"))
+    print("2", find_config_folder())
+    print("3", find_config_folder(path=Path().home()))
+    print("4", find_config_file("runtime.config.pkl", Path().home()))
+    print("5", get_path_in_home_dir(file_name="runtime.config.pkl"))

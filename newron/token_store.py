@@ -4,7 +4,7 @@ import logging
 import os
 from pathlib import Path
 
-from newron.config_path_utils import find_config_file, get_path_in_home_dir
+from newron.config_path_utils import find_config_file, get_path_in_home_dir, find_config_folder
 
 logging.basicConfig(format='[TOKEN_STORE] %(message)s', level=logging.DEBUG)
 
@@ -14,21 +14,42 @@ _CONFIG_FILENAME = "runtime.config.pkl"
 class TokenStore:
     def __init__(self):
         logging.info("Initializing token store")
-        logging.info("Checking token in current and parent directories")
-        is_config_created = True
-        self._config_file_path = find_config_file(_CONFIG_FILENAME)
-        # If config file is not found in current and parent directories, create it in home directory
-        # Bug: if .newron exists in root and config file is not found create in that parent itself
 
+        is_config_created = True
+
+        self._config_file_path = None
+
+        # Beautifully chained if statements upcoming
+        logging.info("Checking token in current and parent directories")
+        self._config_file_path = find_config_file(_CONFIG_FILENAME)
+
+        # If config file is not found in current and parent directories, create it in home directory
         if self._config_file_path is None:
             logging.info("Checking token in home directory")
             self._config_file_path = find_config_file(_CONFIG_FILENAME, Path().home())
 
         if self._config_file_path is None:
-            self._config_file_path = get_path_in_home_dir(file_name=_CONFIG_FILENAME)
             is_config_created = False
+            logging.info("Looking for .newron folder in home directory and its parent directories")
+            config_folder = find_config_folder()
+
+            if config_folder is not None:
+                self._config_file_path = get_path_in_home_dir(file_name=_CONFIG_FILENAME, path=config_folder)
+
+        if self._config_file_path is None:
+            try:
+                os.makedirs(get_path_in_home_dir(path=".newron"))
+            except FileExistsError:
+                pass
+            except Exception as e:
+                logging.error("Failed to create .newron folder in home directory. Seems like you don't have permissions")
+                raise e
+            self._config_file_path = get_path_in_home_dir(file_name=_CONFIG_FILENAME)
 
         try:
+            if not is_config_created:
+                raise FileNotFoundError("Config file does not exists")
+
             logging.info("Loading token store from file")
             self._db_file = open(self._config_file_path, "rb")
             db = pickle.load(self._db_file)
@@ -52,11 +73,10 @@ class TokenStore:
             self._authToken = None
             self._expiresAt = None
 
-            if os.environ.get("REFRESH_TOKEN") is not None:
+            if os.environ.get("NEWRON_ACCESS_TOKEN") is not None:
                 logging.info("Setting refresh token from environment variable")
-                self._refreshToken = os.environ.get("REFRESH_TOKEN")
+                self._refreshToken = os.environ.get("NEWRON_ACCESS_TOKEN")
                 self.save()
-
 
     def get_refresh_token(self) -> str:
         logging.info("Getting refresh token")
@@ -125,3 +145,9 @@ class TokenStore:
             self._db_file.close()
         except Exception as e:
             pass
+
+if __name__ == "__main__":
+
+    t = TokenStore()
+    t.set_refresh_token("123")
+    t.get_refresh_token()
