@@ -1,17 +1,36 @@
 import time
 import pickle
 import logging
+import os
+from pathlib import Path
 
-DB_FILENAME = "token_store.pkl"
+from newron.config_path_utils import find_config_file, get_path_in_home_dir
 
-logging.basicConfig(format='[TOKEN_STORE] %(message)s')
+logging.basicConfig(format='[TOKEN_STORE] %(message)s', level=logging.DEBUG)
+
+_CONFIG_FILENAME = "runtime.config.pkl"
+
 
 class TokenStore:
     def __init__(self):
         logging.info("Initializing token store")
+        logging.info("Checking token in current and parent directories")
+        is_config_created = True
+        self._config_file_path = find_config_file(_CONFIG_FILENAME)
+        # If config file is not found in current and parent directories, create it in home directory
+        # Bug: if .newron exists in root and config file is not found create in that parent itself
+
+        if self._config_file_path is None:
+            logging.info("Checking token in home directory")
+            self._config_file_path = find_config_file(_CONFIG_FILENAME, Path().home())
+
+        if self._config_file_path is None:
+            self._config_file_path = get_path_in_home_dir(file_name=_CONFIG_FILENAME)
+            is_config_created = False
+
         try:
             logging.info("Loading token store from file")
-            self._db_file = open(DB_FILENAME, "rb")
+            self._db_file = open(self._config_file_path, "rb")
             db = pickle.load(self._db_file)
 
             self._refreshToken = None
@@ -26,11 +45,17 @@ class TokenStore:
 
             if "expires_at" in db:
                 self._expiresAt = db["expires_at"]
+
         except FileNotFoundError as e:
             logging.warning("Token store file not found")
             self._refreshToken = None
             self._authToken = None
             self._expiresAt = None
+
+            if os.environ.get("REFRESH_TOKEN") is not None:
+                logging.info("Setting refresh token from environment variable")
+                self._refreshToken = os.environ.get("REFRESH_TOKEN")
+                self.save()
 
 
     def get_refresh_token(self) -> str:
@@ -72,7 +97,7 @@ class TokenStore:
         logging.info("Saving token store to file")
         try:
             logging.info("Opening token store file")
-            db_file = open(DB_FILENAME, "wb")
+            db_file = open(self._config_file_path, "wb")
             db = {}
             if self._refreshToken is not None:
                 logging.info("Saving refresh token")

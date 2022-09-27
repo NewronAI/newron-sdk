@@ -7,7 +7,7 @@ from sys import exit
 from newron.token_store import TokenStore
 
 
-class Auth0():
+class Auth0:
     token_store = TokenStore()
 
     auth0url = "https://auth.newron.ai"
@@ -55,22 +55,26 @@ class Auth0():
             max_polls -= 1
             if op.status_code == 200:
                 print("Authorization Successful")
-                break;
+                break
             if op.status_code == 400 or op.status_code == 401:
                 print("Authorization Failed")
-                exit();
+                exit()
             if op_json["error"] == "invalid_grant":
                 print("Authorization Failed")
-                break;
+                break
             if op_json["error"] == "authorization_pending":
-                print("Authorization Pending")
+                # print("Authorization Pending")
                 time.sleep(2)
             elif op_json["error"] == "slow_down":
                 if failed_polls == 0:
-                    time.sleep(10)
+                    time.sleep(5)
                 else:
-                    print("Waiting for Authorization")
-                    time.sleep(8)
+                    wait_str = "."
+                    for i in range(0, failed_polls):
+                        wait_str += "."
+
+                    print("\rWaiting for Authorization" + wait_str, end="")
+                    time.sleep(7)
                 failed_polls += 1
             else:
                 time.sleep(10)
