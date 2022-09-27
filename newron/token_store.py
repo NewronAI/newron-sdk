@@ -146,8 +146,3 @@ class TokenStore:
         except Exception as e:
             pass
 
-if __name__ == "__main__":
-
-    t = TokenStore()
-    t.set_refresh_token("123")
-    t.get_refresh_token()
