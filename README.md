@@ -1,12 +1,8 @@
 <div align = "center"><img src = "https://www.newron.ai/newron-logo.svg" width=25% /></div>
 <h1 align="center">
-  newron-sdk - Just init().
+    Machine Learning, Made Simple
 </h1>
 <br>
-
---------------------------
-                                              Machine Learning, Made Simple
-----------------------------
 
 ## Introduction
 Newron is a data-centric ML platform to easily build, manage, deploy and continuously improve models through data driven development. It is designed for simplicity, speed, collaboration and continuous model improvement, built to integrate with your favourite machine learning frameworks.
