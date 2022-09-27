@@ -5,7 +5,7 @@
 <br>
 
 ## Introduction
-Newron is a data-centric ML platform to easily build, manage, deploy and continuously improve models through data driven development. It is designed for simplicity, speed, collaboration and continuous model improvement, built to integrate with your favourite machine learning frameworks.
+[Newron](https://newron.ai) is a data-centric ML platform to easily build, manage, deploy and continuously improve models through data driven development. It is designed for simplicity, speed, collaboration and continuous model improvement, built to integrate with your favourite machine learning frameworks.
 
 We provide a frictionless machine learning development experience to take care of the repetitive things: data quality, automatically track experiments, version models and continous model improvement by incorporating the ground truth data. All of this with just a few lines of code. It is easy to set up and enables ML engineers to develop, improve and deploy machine learning models with confidence and ease.
 
