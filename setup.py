@@ -1,5 +1,6 @@
 import distutils
 import sys
+import toml
 
 from setuptools import setup
 
@@ -25,9 +26,16 @@ if sys.argv[-1] == 'setup.py':
     print()
 
 if __name__ == "__main__":
+    version = None
+    with open("pyproject.toml") as f:
+        data = toml.load(f)
+        version = data["project"]["version"]
+        print(version)
+        sys.exit()
+
     setup(
         name="newron",
-        version="0.1.7",
+        version=version,
         author="Newron AI",
         author_email="hello@newron.ai",
         description="NewronAI: Machine Learning, Made Simple. Client SDK for Newron AI",

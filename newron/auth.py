@@ -1,9 +1,11 @@
+import logging
 import os
 import requests
 import time
 import webbrowser
 from sys import exit
 
+from newron.NColors import NColors
 from newron.token_store import TokenStore
 
 
@@ -30,7 +32,7 @@ class Auth0:
             exit()
         resp = x.json()
         print("\n\n************************************************************\n\n")
-        print("Please verify the following code on the device: " + str(resp['user_code']))
+        print("Please verify the following code on the device: " + NColors["BLUE"] + NColors["BOLD"] + str(resp['user_code'] + NColors["ENDC"]))
         print("\n\n************************************************************\n\n")
         print("Please visit the following link " + str(resp['verification_uri_complete']))
         print("\n\n************************************************************\n\n")
@@ -54,7 +56,7 @@ class Auth0:
             op_json = op.json()
             max_polls -= 1
             if op.status_code == 200:
-                print("Authorization Successful")
+                print(NColors["SUCCESS"] +"Authorization Successful" + NColors["ENDC"])
                 break
             if op.status_code == 400 or op.status_code == 401:
                 print("Authorization Failed")
@@ -86,23 +88,29 @@ class Auth0:
 
     def authenticate(self):
 
+        did_token_exist = True
         if self.token_store.is_valid() is False or self.token_store.is_expired() is True:
+            did_token_exist = False
             auth_output = self.do_device_login()
             self.token_store.set_refresh_token(auth_output["id_token"])
             self.token_store.set_auth_token(auth_output["access_token"])
             self.token_store.set_expires_at(auth_output["expires_in"] + int(time.time()))
+
+        if did_token_exist:
+            print(NColors["SUCCESS"] + "Authorized to a previous session" + NColors["ENDC"])
 
         token = self.token_store.get_auth_token()
 
         headers = {"Authorization": "Bearer " + token}
         user_response = requests.get(self.userURL, headers=headers)
         if not user_response.json()["email_verified"]:
-            print("Please Verify your email")
+            print(NColors["WARNING"]+"Please Verify your email"+NColors["ENDC"])
         user_response = user_response.json()
         user_response["access_token"] = token
         return user_response
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.ERROR)
     auth = Auth0()
     print(auth.authenticate())
