@@ -29,7 +29,6 @@ You can also use the context manager syntax like this:
 which automatically terminates the run at the end of the ``with`` block.
 """
 from newron.introspect import introspect
-from newron.version import VERSION as __version__  # pylint: disable=unused-import
 from mlflow.utils.logging_utils import _configure_mlflow_loggers
 
 
@@ -185,7 +184,7 @@ __all__ = [
 ] + _model_flavors_supported
 
 # Do introspection
-introspect()
+# introspect()
 
 # To Do
 #"set_tracking_uri",

@@ -1,6 +1,5 @@
 import distutils
 import sys
-import toml
 
 from setuptools import setup
 
@@ -26,12 +25,13 @@ if sys.argv[-1] == 'setup.py':
     print()
 
 if __name__ == "__main__":
+
     version = None
-    with open("pyproject.toml") as f:
-        data = toml.load(f)
-        version = data["project"]["version"]
-        print(version)
-        sys.exit()
+    with open("./newron/version.py") as fp:
+        for line in fp.read().splitlines():
+            if line.startswith('__version__'):
+                delim = '"' if '"' in line else "'"
+                version = line.split(delim)[1]
 
     setup(
         name="newron",

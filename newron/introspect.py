@@ -1,17 +1,15 @@
 import time
-
 import requests
-import toml as toml
 
-from newron.colored import warning_print, error_print, blue_print, success_print, cyan_print
+from newron.colored import warning_print, error_print, blue_print, success_print
 from newron.token_store import TokenStore
+from newron.version import __version__
 
-introspection_validity = 24 * 60 * 60 # 24 hours
+introspection_validity = 24 * 60 * 60  # 24 hours
+
 
 def get_newron_version():
-    with open("./../pyproject.toml", "r") as f:
-        d = toml.load(f)
-        return d["project"]["version"]
+    return __version__
 
 
 def get_newron_version_from_pypi():
@@ -34,18 +32,14 @@ def introspect():
     last_introspection = token_store.get_introspected_at()
 
     if last_introspection is not None and time.time() - last_introspection < introspection_validity:
-        cyan_print("Last version check was less than 24 hours ago. Skipping...")
+        # cyan_print("Last version check was less than 24 hours ago. Skipping...")
         return
 
-    newron_version = get_newron_version()
-    print("Newron SDK version: ", end="")
-    blue_print("{}".format(newron_version))
-    print("Newron Version from PyPi: ", end="")
     success_print("{}".format(get_newron_version_from_pypi()))
     print("Newron Version from Github: {}".format(get_newron_version_from_github()))
 
     try:
-        r = requests.get("https://api.newron.ai/v1/introspect/sdk-version", params={"version": newron_version})
+        r = requests.get("https://api.newron.ai/v1/introspect/sdk-version", params={"version": get_newron_version()})
         data = r.json()
         status = data["status"]
         comment = data["comment"]
@@ -67,7 +61,6 @@ def introspect():
                 error_print("[ERR] " + message["message"])
 
         token_store.set_introspected_at(time.time())
-
 
     except Exception as e:
         pass
