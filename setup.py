@@ -48,13 +48,16 @@ if __name__ == "__main__":
             'Tracker': 'https://github.com/NewronAI/NewronSDK/issues',
         },
         keywords=['mlops', "experiment", "tracking", "deployments", "mlflow"],
-        packages=['newron'],
+        packages=['newron', 'plugin'],
         license='Apache License',
         install_requires=["mlflow"],
-        entry_points="""
-                        [console_scripts]
-                        newron=newron.cli:cli
-                    """,
+        entry_points={
+            "console_scripts": [
+                "newron=newron.cli:cli"
+            ],
+            "mlflow.request_header_provider": "unused=src.request_header_provider:PluginRequestHeaderProvider",
+        },
+
         cmdclass={
             "min_python_version": MinPythonVersion,
         },
