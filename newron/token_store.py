@@ -6,31 +6,32 @@ from pathlib import Path
 
 from newron.config_path_utils import find_config_file, get_path_in_home_dir, find_config_folder
 
-logging.basicConfig(format='[TOKEN_STORE] %(message)s', level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
 
 _CONFIG_FILENAME = "runtime.config.pkl"
 
 
 class TokenStore:
     def __init__(self):
-        logging.info("Initializing token store")
+        logger.info("Initializing token store")
 
         is_config_created = True
 
         self._config_file_path = None
 
         # Beautifully chained if statements upcoming
-        logging.info("Checking token in current and parent directories")
+        logger.info("Checking token in current and parent directories")
         self._config_file_path = find_config_file(_CONFIG_FILENAME)
 
         # If config file is not found in current and parent directories, create it in home directory
         if self._config_file_path is None:
-            logging.info("Checking token in home directory")
+            logger.info("Checking token in home directory")
             self._config_file_path = find_config_file(_CONFIG_FILENAME, Path().home())
 
         if self._config_file_path is None:
             is_config_created = False
-            logging.info("Looking for .newron folder in home directory and its parent directories")
+            logger.info("Looking for .newron folder in home directory and its parent directories")
             config_folder = find_config_folder()
 
             if config_folder is not None:
@@ -42,7 +43,7 @@ class TokenStore:
             except FileExistsError:
                 pass
             except Exception as e:
-                logging.error("Failed to create .newron folder in home directory. Seems like you don't have permissions")
+                logger.error("Failed to create .newron folder in home directory. Seems like you don't have permissions")
                 raise e
             self._config_file_path = get_path_in_home_dir(file_name=_CONFIG_FILENAME)
 
@@ -50,97 +51,124 @@ class TokenStore:
             if not is_config_created:
                 raise FileNotFoundError("Config file does not exists")
 
-            logging.info("Loading token store from file")
+            logger.info("Loading token store from file")
             self._db_file = open(self._config_file_path, "rb")
             db = pickle.load(self._db_file)
 
             self._refreshToken = None
             self._authToken = None
             self._expiresAt = None
+            self._introspected_at = None
 
             if "refresh_token" in db:
                 self._refreshToken = db["refresh_token"]
 
             if "auth_token" in db:
+                os.environ.update({"NEWRON_ACCESS_TOKEN": db["auth_token"]})
                 self._authToken = db["auth_token"]
 
             if "expires_at" in db:
                 self._expiresAt = db["expires_at"]
 
+            if "introspected_at" in db:
+                self._introspected_at = db["introspected_at"]
+
         except FileNotFoundError as e:
-            logging.warning("Token store file not found")
+            logger.warning("Token store file not found")
             self._refreshToken = None
             self._authToken = None
             self._expiresAt = None
+            self._introspected_at = None
 
             if os.environ.get("NEWRON_ACCESS_TOKEN") is not None:
-                logging.info("Setting refresh token from environment variable")
+                logger.info("Setting refresh token from environment variable")
                 self._refreshToken = os.environ.get("NEWRON_ACCESS_TOKEN")
                 self.save()
 
     def get_refresh_token(self) -> str:
-        logging.info("Getting refresh token")
+        logger.info("Getting refresh token")
         return self._refreshToken
 
     def get_auth_token(self) -> str:
-        logging.info("Getting auth token")
+        logger.info("Getting auth token")
         return self._authToken
 
     def get_expires_at(self) -> int:
-        logging.info("Getting expires at")
+        logger.info("Getting expires at")
         return self._expiresAt
 
+    def get_introspected_at(self) -> int:
+        return self._introspected_at
+
     def set_refresh_token(self, refresh_token) -> None:
-        logging.info("Setting refresh token")
+        logger.info("Setting refresh token")
         self._refreshToken = refresh_token
         self.save()
 
     def set_auth_token(self, auth_token) -> None:
-        logging.info("Setting auth token")
+        logger.info("Setting auth token")
+        os.environ.update({"NEWRON_ACCESS_TOKEN": auth_token})
         self._authToken = auth_token
         self.save()
 
     def set_expires_at(self, expires_at) -> None:
-        logging.info("Setting expires at")
+        logger.info("Setting expires at")
         self._expiresAt = expires_at
         self.save()
 
+    def set_introspected_at(self, introspected_at) -> None:
+        logger.info("Setting introspected at")
+        self._introspected_at = introspected_at
+        self.save()
+
     def is_expired(self) -> bool:
-        logging.info("Checking if token is expired")
+        logger.info("Checking if token is expired")
         return self._expiresAt < time.time()
 
     def is_valid(self) -> bool:
-        logging.info("Checking if token store is valid")
+        logger.info("Checking if token store is valid")
         return self._refreshToken is not None and self._authToken is not None
 
     def save(self):
-        logging.info("Saving token store to file")
+        logger.info("Saving token store to file")
         try:
-            logging.info("Opening token store file")
+            logger.info("Opening token store file")
+
             db_file = open(self._config_file_path, "wb")
             db = {}
+
             if self._refreshToken is not None:
-                logging.info("Saving refresh token")
+                logger.info("Saving refresh token")
                 db["refresh_token"] = self._refreshToken
+
             if self._authToken is not None:
-                logging.info("Saving auth token")
+                logger.info("Saving auth token")
                 db["auth_token"] = self._authToken
+
             if self._expiresAt is not None:
-                logging.info("Saving expires at")
+                logger.info("Saving expires at")
                 db["expires_at"] = self._expiresAt
-            logging.info("Saving token store to file")
+
+            if self._introspected_at is not None:
+                logger.info("Saving introspected at")
+                db["introspected_at"] = self._introspected_at
+
+            logger.info("Saving token store to file")
             pickle.dump(db, db_file)
-            logging.info("Flushing token store file")
+
+            logger.info("Flushing token store file")
             db_file.flush()
-            logging.info("Closing token store file")
+
+            logger.info("Closing token store file")
             db_file.close()
-            logging.info("Token store saved")
+
+            logger.info("Token store saved")
         except Exception as e:
-            logging.error("Failed to save token store to file")
+            logger.error("Failed to save token store to file")
 
 
     def __del__(self):
-        logging.info("Destroying token store")
+        logger.info("Destroying token store")
         try:
             self._db_file.close()
         except Exception as e:

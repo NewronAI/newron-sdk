@@ -25,9 +25,17 @@ if sys.argv[-1] == 'setup.py':
     print()
 
 if __name__ == "__main__":
+
+    version = None
+    with open("./newron/version.py") as fp:
+        for line in fp.read().splitlines():
+            if line.startswith('__version__'):
+                delim = '"' if '"' in line else "'"
+                version = line.split(delim)[1]
+
     setup(
         name="newron",
-        version="0.1.7",
+        version=version,
         author="Newron AI",
         author_email="hello@newron.ai",
         description="NewronAI: Machine Learning, Made Simple. Client SDK for Newron AI",
@@ -40,13 +48,16 @@ if __name__ == "__main__":
             'Tracker': 'https://github.com/NewronAI/NewronSDK/issues',
         },
         keywords=['mlops', "experiment", "tracking", "deployments", "mlflow"],
-        packages=['newron'],
+        packages=['newron', 'plugin'],
         license='Apache License',
         install_requires=["mlflow"],
-        entry_points="""
-                        [console_scripts]
-                        newron=newron.cli:cli
-                    """,
+        entry_points={
+            "console_scripts": [
+                "newron=newron.cli:cli"
+            ],
+            "mlflow.request_header_provider": "unused=plugin.request_header_provider:PluginRequestHeaderProvider"
+        },
+
         cmdclass={
             "min_python_version": MinPythonVersion,
         },
