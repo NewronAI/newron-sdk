@@ -101,6 +101,7 @@ class Auth0:
 
         token = self.token_store.get_auth_token()
 
+
         headers = {"Authorization": "Bearer " + token}
         user_response = requests.get(self.userURL, headers=headers)
         if not user_response.json()["email_verified"]:

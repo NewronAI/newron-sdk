@@ -64,6 +64,7 @@ class TokenStore:
                 self._refreshToken = db["refresh_token"]
 
             if "auth_token" in db:
+                os.environ.update({"NEWRON_ACCESS_TOKEN": db["auth_token"]})
                 self._authToken = db["auth_token"]
 
             if "expires_at" in db:
@@ -106,6 +107,7 @@ class TokenStore:
 
     def set_auth_token(self, auth_token) -> None:
         logger.info("Setting auth token")
+        os.environ.update({"NEWRON_ACCESS_TOKEN": auth_token})
         self._authToken = auth_token
         self.save()
 

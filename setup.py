@@ -55,7 +55,7 @@ if __name__ == "__main__":
             "console_scripts": [
                 "newron=newron.cli:cli"
             ],
-            "mlflow.request_header_provider": "unused=src.request_header_provider:PluginRequestHeaderProvider",
+            "mlflow.request_header_provider": "unused=plugin.request_header_provider:PluginRequestHeaderProvider"
         },
 
         cmdclass={
