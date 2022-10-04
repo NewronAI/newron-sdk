@@ -184,7 +184,7 @@ __all__ = [
 ] + _model_flavors_supported
 
 # Do introspection
-# introspect()
+introspect()
 
 # To Do
 #"set_tracking_uri",
